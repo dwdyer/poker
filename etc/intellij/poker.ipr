@@ -2,6 +2,13 @@
 <project version="4" relativePaths="false">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
+    <buildFile url="file:///Users/dan/Projects/poker/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
   </component>
   <component name="BuildJarProjectSettings">
     <option name="BUILD_JARS_ON_MAKE" value="false" />
@@ -157,13 +164,13 @@
         <inspection_tool class="AssertAsName" level="WARNING" enabled="true" />
         <inspection_tool class="ClassNameSameAsAncestorName" level="WARNING" enabled="true" />
         <inspection_tool class="ClassNamingConvention" level="WARNING" enabled="true">
-          <option name="m_regex" value="[A-Z][A-Za-z]*" />
+          <option name="m_regex" value="[A-Z][A-Za-z\d]*" />
           <option name="m_minLength" value="3" />
           <option name="m_maxLength" value="64" />
         </inspection_tool>
         <inspection_tool class="ConfusingMainMethod" level="WARNING" enabled="true" />
         <inspection_tool class="InterfaceNamingConvention" level="WARNING" enabled="true">
-          <option name="m_regex" value="[A-Z][A-Za-z]*" />
+          <option name="m_regex" value="[A-Z][A-Za-z\d]*" />
           <option name="m_minLength" value="3" />
           <option name="m_maxLength" value="64" />
         </inspection_tool>
@@ -219,16 +226,32 @@
           <option name="ignoreObjectConstruction" value="true" />
           <option name="ignoreTypeCasts" value="false" />
         </inspection_tool>
+        <inspection_tool class="SystemGC" level="WARNING" enabled="true" />
+        <inspection_tool class="ZeroLengthArrayInitialization" level="WARNING" enabled="true" />
+        <inspection_tool class="RedundantSuppression" level="WARNING" enabled="true" />
+        <inspection_tool class="WrongPackageStatement" level="ERROR" enabled="true" />
+        <inspection_tool class="AntMissingPropertiesFileInspection" level="WARNING" enabled="true" />
+        <inspection_tool class="EnumeratedClassNamingConvention" level="WARNING" enabled="true">
+          <option name="m_regex" value="[A-Z][A-Za-z\d]*" />
+          <option name="m_minLength" value="3" />
+          <option name="m_maxLength" value="64" />
+        </inspection_tool>
+        <inspection_tool class="CachedNumberConstructorCall" level="WARNING" enabled="true" />
+        <inspection_tool class="CastThatLosesPrecision" level="WARNING" enabled="true" />
+        <inspection_tool class="FieldAccessedSynchronizedAndUnsynchronized" level="WARNING" enabled="true">
+          <option name="countGettersAndSetters" value="false" />
+        </inspection_tool>
+        <inspection_tool class="ThreadWithDefaultRunMethod" level="WARNING" enabled="true" />
+        <inspection_tool class="SafeLock" level="WARNING" enabled="true" />
+        <inspection_tool class="PublicFieldAccessedInSynchronizedContext" level="WARNING" enabled="true" />
+        <inspection_tool class="SynchronizeOnThis" level="WARNING" enabled="true" />
+        <inspection_tool class="WaitWithoutCorrespondingNotify" level="WARNING" enabled="true" />
+        <inspection_tool class="WaitCalledOnCondition" level="WARNING" enabled="true" />
+        <inspection_tool class="UnconditionalWait" level="WARNING" enabled="true" />
+        <inspection_tool class="SynchronizeOnLock" level="WARNING" enabled="true" />
+        <inspection_tool class="AccessToStaticFieldLockedOnInstance" level="WARNING" enabled="true" />
       </profile>
     </profiles>
-  </component>
-  <component name="IntelliTail">
-    <property name="buffer-wrap" value="false" />
-    <property name="buffer-size" value="50" />
-    <property name="external-editor" value="/usr/bin/emacs" />
-    <property name="recent-files" value="" />
-    <property name="poll-interval" value="500" />
-    <property name="external-in-idea" value="true" />
   </component>
   <component name="JavacSettings">
     <option name="DEBUGGING_INFO" value="true" />
@@ -417,11 +440,12 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/game/game.iml" filepath="$PROJECT_DIR$/game/game.iml" />
+      <module fileurl="file://$PROJECT_DIR$/game.iml" filepath="$PROJECT_DIR$/game.iml" group="modules" />
+      <module fileurl="file://$PROJECT_DIR$/global.iml" filepath="$PROJECT_DIR$/global.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/classes" />
+    <output url="file:///Users/dan/Projects/poker/build/classes" />
   </component>
   <component name="ProjectRunConfigurationManager" />
   <component name="RmicSettings">
@@ -447,7 +471,15 @@
     <option name="cycleTableSpecificationString" value="" />
     <option name="shortCycleTableSpecificationString" value="" />
   </component>
-  <component name="libraryTable" />
+  <component name="libraryTable">
+    <library name="testng-5.6-jdk15">
+      <CLASSES>
+        <root url="jar:///Users/dan/Projects/poker/lib/testng-5.6-jdk15.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
   <component name="uidesigner-configuration">
     <option name="INSTRUMENT_CLASSES" value="true" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />

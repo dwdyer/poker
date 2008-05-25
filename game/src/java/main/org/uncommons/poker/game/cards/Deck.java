@@ -1,4 +1,4 @@
-package org.uncommons.poker.game;
+package org.uncommons.poker.game.cards;
 
 import java.util.Collections;
 import java.util.Random;

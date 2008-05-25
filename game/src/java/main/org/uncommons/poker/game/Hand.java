@@ -8,6 +8,7 @@ import java.util.SortedSet;
 import java.util.Stack;
 import java.util.TreeSet;
 import org.uncommons.poker.user.User;
+import org.uncommons.poker.game.cards.DealtCard;
 
 /**
  * @author Daniel Dyer

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<project xmlns:module="antlib:org.uncommons.antlib"
+         name="poker"
+         default="dist"
+         basedir=".">
+
+  <description>Ant build file for the poker project.</description>
+
+  <taskdef uri="antlib:org.uncommons.antlib"
+           resource="org/uncommons/antlib/antlib.xml"
+           classpath="lib/uncommons-antlib.jar"/>
+
+  <target name="clean">
+    <module:clean module="game" />
+    <delete dir="${docs.dir}" />
+  </target>
+
+
+  <target name="game">
+    <module:compile module="game" />
+    <module:jar module="game" />
+  </target>
+
+
+  <target name="dist" depends="clean, game" />
+
+  <target name="test" depends="dist">
+    <module:test-all suites="etc/testng/*.xml" />
+  </target>
+
+</project>

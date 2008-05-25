@@ -1,4 +1,4 @@
-package org.uncommons.poker.game;
+package org.uncommons.poker.game.cards;
 
 /**
  * @author Daniel Dyer
