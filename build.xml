@@ -12,17 +12,24 @@
 
   <target name="clean">
     <module:clean module="game" />
+    <module:clean module="utilities" />
     <delete dir="${docs.dir}" />
   </target>
 
 
-  <target name="game">
+  <target name="utilities">
+    <module:compile module="utilities" />
+    <module:jar module="utilities" />
+  </target>
+
+
+  <target name="game" depends="utilities">
     <module:compile module="game" />
     <module:jar module="game" />
   </target>
 
 
-  <target name="dist" depends="clean, game" />
+  <target name="dist" depends="clean, utilities, game" />
 
   <target name="test" depends="dist">
     <module:test-all suites="etc/testng/*.xml" />

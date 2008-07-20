@@ -26,9 +26,9 @@ public class Deck
     }
 
 
-    public DealtCard dealCard(boolean faceUp)
+    public PlayingCard dealCard()
     {
-        return new DealtCard(cards.pop(), faceUp);
+        return cards.pop();
     }
 
 

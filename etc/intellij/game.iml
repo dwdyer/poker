@@ -22,6 +22,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="utilities" />
     <orderEntryProperties />
   </component>
 </module>

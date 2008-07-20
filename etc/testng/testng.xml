@@ -8,4 +8,10 @@
     </packages>
   </test>
 
+  <test name="Utilities" >
+    <packages>
+      <package name="org.uncommons.util.*" />
+    </packages>
+  </test>
+
 </suite>

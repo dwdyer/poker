@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 import org.uncommons.poker.game.Suit;
+import org.uncommons.util.ListUtils;
 
 /**
  * @author Daniel Dyer
@@ -16,8 +17,13 @@ public class DefaultHandEvaluator implements HandEvaluator
         {
             throw new IllegalArgumentException("Hand must contain no more than " + RankedHand.HAND_SIZE + " cards.");
         }
-        Collections.sort(cards);        
-        return new RankedHand(cards, rankHand(cards));
+        // Sort cards by rank, highest first.
+        Collections.sort(cards, Collections.reverseOrder());
+
+        HandRanking handRanking = rankHand(cards);
+        orderCards(cards, handRanking);
+
+        return new RankedHand(cards, handRanking);
     }
 
 
@@ -39,7 +45,7 @@ public class DefaultHandEvaluator implements HandEvaluator
                 if (flush && straight)
                 {
                     // A royal flush is a straight flush from 10 to Ace.
-                    FaceValue lowest = cards.get(0).getValue();
+                    FaceValue lowest = cards.get(RankedHand.HAND_SIZE - 1).getValue();
                     return lowest == FaceValue.TEN ? HandRanking.ROYAL_FLUSH : HandRanking.STRAIGHT_FLUSH;
                 }
                 else if (flush)
@@ -56,6 +62,87 @@ public class DefaultHandEvaluator implements HandEvaluator
                 }
             }
         }
+    }
+
+
+    /**
+     * Re-orders the cards in a hand so that the most significant cards(s) are
+     * first.  For example, the highest ranked card is the most significant in
+     * a straight or flush whereas the two matching cards are the most significant
+     * in a hand that has one pair.
+     *
+     * Once the hand is correctly ordered, two hands with the same ranking can
+     * easily be compared to see which is better by comparing the most significant
+     * card (if these are equivalent then the second most significant cards can
+     * be compared and so on).
+     */
+    private void orderCards(List<PlayingCard> cards, HandRanking ranking)
+    {
+        // Assumes that the cards are already sorted by rank, so for flushes, high
+        // cards and most straights, there is nothing to do.
+        switch (ranking)
+        {
+            case STRAIGHT_FLUSH:
+            case STRAIGHT:
+            {
+                // If this hand is A, 2, 3, 4, 5, make sure ace is low.
+                if (cards.get(0).getValue() == FaceValue.ACE && cards.get(1).getValue() == FaceValue.FIVE)
+                {
+                    cards.add(cards.remove(0));
+                }
+                break;
+            }
+            case FOUR_OF_A_KIND:
+            {
+                // The matching four cards will all be next to each other, so the kicker
+                // is either at the beginning or the end.  If it's at the beginning, it
+                // needs to be moved to the end.
+                if (cards.get(0).getValue() != cards.get(1).getValue())
+                {
+                    cards.add(cards.remove(0));
+                }
+                break;
+            }
+            case FULL_HOUSE:
+            {
+                // The three-of-a-kind is more important than the pair, so if the pair
+                // is first, it needs to be moved to the end.
+                if (cards.get(2).getValue() != cards.get(0).getValue()) // 3rd card is not the same as 1st.
+                {
+                    cards.add(cards.remove(0)); // Shift first card to the end.
+                    cards.add(cards.remove(0)); // Shift second (now first) card to the end.
+                }
+                break;
+            }
+            case THREE_OF_A_KIND:
+            {
+                int start = findPair(cards);
+                ListUtils.shiftLeft(cards, start, 3, start);
+                break;
+            }
+            case TWO_PAIR:
+                // TO DO:
+                break;
+            case PAIR:
+            {
+                int start = findPair(cards);
+                ListUtils.shiftLeft(cards, start, 2, start);
+                break;
+            }
+        }
+    }
+
+
+    private int findPair(List<PlayingCard> cards)
+    {
+        for (int i = 0; i < cards.size() - 1; i++)
+        {
+            if (cards.get(i).getValue() == cards.get(i + 1).getValue())
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 
 
@@ -120,7 +207,7 @@ public class DefaultHandEvaluator implements HandEvaluator
 
 
     /**
-     * Assumes that there are no pairs in the hand.
+     * Assumes that there are no pairs in the hand and that the cards are sorted.
      * @return True if the hand is a straight (or straight-flush), false otherwise.
      */
     private boolean isStraight(List<PlayingCard> cards)
@@ -130,8 +217,8 @@ public class DefaultHandEvaluator implements HandEvaluator
             return false;
         }
         
-        FaceValue lowest = cards.get(0).getValue();
-        FaceValue highest = cards.get(RankedHand.HAND_SIZE - 1).getValue();
+        FaceValue highest = cards.get(0).getValue();
+        FaceValue lowest = cards.get(RankedHand.HAND_SIZE - 1).getValue();
         if (highest.ordinal() - lowest.ordinal() == RankedHand.HAND_SIZE - 1)
         {
             return true;
@@ -139,7 +226,7 @@ public class DefaultHandEvaluator implements HandEvaluator
         // Check for wheel (A, 2, 3, 4, 5).
         else if (highest == FaceValue.ACE && lowest == FaceValue.TWO)
         {
-            FaceValue highestExcludingAce = cards.get(RankedHand.HAND_SIZE - 2).getValue();
+            FaceValue highestExcludingAce = cards.get(1).getValue();
             return highestExcludingAce == FaceValue.FIVE;
         }
         else

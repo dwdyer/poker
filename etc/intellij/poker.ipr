@@ -442,6 +442,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/game.iml" filepath="$PROJECT_DIR$/game.iml" group="modules" />
       <module fileurl="file://$PROJECT_DIR$/global.iml" filepath="$PROJECT_DIR$/global.iml" />
+      <module fileurl="file://$PROJECT_DIR$/utilities.iml" filepath="$PROJECT_DIR$/utilities.iml" group="modules" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
