@@ -32,6 +32,12 @@ public class Deck
     }
 
 
+    public int getRemainingCardCount()
+    {
+        return cards.size();
+    }
+
+
     public static Deck createFullDeck()
     {
         return new Deck(PlayingCard.values());

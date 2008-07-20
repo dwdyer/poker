@@ -5,15 +5,15 @@ package org.uncommons.poker.game.cards;
  */
 public enum HandRanking
 {
-    ROYAL_FLUSH,
-    STRAIGHT_FLUSH,
-    FOUR_OF_A_KIND,
-    FULL_HOUSE,
-    FLUSH,
-    STRAIGHT,
-    THREE_OF_A_KIND,
-    TWO_PAIR,
-    PAIR,
+    LOW_EIGHT_OR_BETTER,
     HIGH_CARD,
-    LOW_EIGHT_OR_BETTER
+    PAIR,
+    TWO_PAIR,
+    THREE_OF_A_KIND,
+    STRAIGHT,
+    FLUSH,
+    FULL_HOUSE,
+    FOUR_OF_A_KIND,
+    STRAIGHT_FLUSH,
+    ROYAL_FLUSH
 }

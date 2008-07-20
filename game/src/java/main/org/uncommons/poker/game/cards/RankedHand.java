@@ -42,7 +42,7 @@ public final class RankedHand implements Comparable<RankedHand>
     {
         int compare = this.ranking.compareTo(otherHand.getRanking());
         // If the hands have the same ranking, check the actual cards.  For example,
-        // both may be ranked as PAIR, but one maybe a pair of threes and the other
+        // both may be ranked as PAIR, but one may be a pair of threes and the other
         // a pair of kings.
         if (compare == 0)
         {
