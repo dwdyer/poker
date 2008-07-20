@@ -1,6 +1,7 @@
 package org.uncommons.poker.game.cards;
 
 import org.testng.annotations.Test;
+import org.uncommons.maths.random.MersenneTwisterRNG;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -17,7 +18,7 @@ public class DeckTest
     @Test
     public void testCreateDeck()
     {
-        Deck deck = Deck.createFullDeck();
+        Deck deck = Deck.createFullDeck(new MersenneTwisterRNG());
         int size = deck.getRemainingCardCount();
         assert size == 52 : "Full deck should have 52 cards, has " + size;
         // Add each card in the deck to a HashSet to eliminate duplicates.

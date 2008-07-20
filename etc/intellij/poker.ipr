@@ -440,6 +440,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/experiments.iml" filepath="$PROJECT_DIR$/experiments.iml" group="modules" />
       <module fileurl="file://$PROJECT_DIR$/game.iml" filepath="$PROJECT_DIR$/game.iml" group="modules" />
       <module fileurl="file://$PROJECT_DIR$/global.iml" filepath="$PROJECT_DIR$/global.iml" />
       <module fileurl="file://$PROJECT_DIR$/utilities.iml" filepath="$PROJECT_DIR$/utilities.iml" group="modules" />
@@ -473,9 +474,16 @@
     <option name="shortCycleTableSpecificationString" value="" />
   </component>
   <component name="libraryTable">
+    <library name="uncommons-maths-1.1pre">
+      <CLASSES>
+        <root url="jar:///Users/dan/Projects/poker/lib/runtime/uncommons-maths-1.1pre.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
     <library name="testng-5.6-jdk15">
       <CLASSES>
-        <root url="jar:///Users/dan/Projects/poker/lib/testng-5.6-jdk15.jar!/" />
+        <root url="jar:///Users/dan/Projects/poker/lib/compiletime/testng-5.6-jdk15.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

@@ -8,12 +8,14 @@
 
   <taskdef uri="antlib:org.uncommons.antlib"
            resource="org/uncommons/antlib/antlib.xml"
-           classpath="lib/uncommons-antlib.jar"/>
+           classpath="lib/compiletime/uncommons-antlib.jar"/>
 
   <target name="clean">
+    <module:clean module="experiments" />
     <module:clean module="game" />
     <module:clean module="utilities" />
     <delete dir="${docs.dir}" />
+    <delete dir="./dist" />
   </target>
 
 
@@ -25,11 +27,23 @@
 
   <target name="game" depends="utilities">
     <module:compile module="game" />
-    <module:jar module="game" />
+    <module:jar module="game" classpath="utilities.jar uncommons-maths-1.1pre.jar" />
   </target>
 
 
-  <target name="dist" depends="clean, utilities, game" />
+  <target name="experiments" depends="game">
+    <module:compile module="experiments" />
+    <module:jar module="experiments" classpath="game.jar uncommons-maths-1.1pre.jar"/>
+  </target>
+
+
+  <target name="dist" depends="clean, utilities, game, experiments">
+    <mkdir dir="./dist" />
+    <copy todir="./dist" flatten="true">
+      <fileset dir="${lib.dir}/runtime" includes="*.jar" />
+      <fileset dir="${modules.dir}" includes="*/${build.dir}/*.jar" />
+    </copy>
+  </target>
 
   <target name="test" depends="dist">
     <module:test-all suites="etc/testng/*.xml" />
