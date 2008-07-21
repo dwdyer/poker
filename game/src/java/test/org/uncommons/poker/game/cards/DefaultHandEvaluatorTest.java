@@ -283,11 +283,12 @@ public class DefaultHandEvaluatorTest
     {
         List<PlayingCard> cards = asList(PlayingCard.KING_OF_SPADES,
                                          PlayingCard.KING_OF_DIAMONDS,
+                                         PlayingCard.EIGHT_OF_HEARTS,
                                          PlayingCard.SIX_OF_HEARTS,
-                                         PlayingCard.SIX_OF_CLUBS,
-                                         PlayingCard.TWO_OF_HEARTS);
+                                         PlayingCard.SIX_OF_CLUBS);
         RankedHand hand = handEvaluator.evaluate(cards);
-        assert hand.getRanking() == HandRanking.TWO_PAIR : "Wrong hand ranking: " + hand.getRanking();        
+        assert hand.getRanking() == HandRanking.TWO_PAIR : "Wrong hand ranking: " + hand.getRanking();
+        assert hand.getCards().get(4) == PlayingCard.EIGHT_OF_HEARTS : "Wrong order.";
     }
 
 

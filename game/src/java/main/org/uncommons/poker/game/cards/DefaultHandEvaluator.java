@@ -123,8 +123,19 @@ public class DefaultHandEvaluator implements HandEvaluator
                 break;
             }
             case TWO_PAIR:
-                // TO DO:
+            {
+                // The kicker will either be the first, third or fifth card.  If it is the first or third,
+                // it needs to be moved.
+                if (cards.get(0).getValue() != cards.get(1).getValue()) // Kicker is first card.
+                {
+                    cards.add(cards.remove(0));
+                }
+                else if (cards.get(2).getValue() != cards.get(3).getValue()) // Kicker is third card.
+                {
+                    cards.add(cards.remove(2));
+                }
                 break;
+            }
             case PAIR:
             {
                 int start = findPair(cards);
