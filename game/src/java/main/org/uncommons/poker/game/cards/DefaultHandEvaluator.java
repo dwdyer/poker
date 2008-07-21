@@ -1,6 +1,7 @@
 package org.uncommons.poker.game.cards;
 
 import java.util.List;
+import java.util.Collections;
 import org.uncommons.poker.game.Suit;
 import org.uncommons.util.ListUtils;
 
@@ -89,7 +90,7 @@ public class DefaultHandEvaluator implements HandEvaluator
                 // If this hand is A, 2, 3, 4, 5, make sure ace is low.
                 if (cards.get(0).getValue() == FaceValue.ACE && cards.get(1).getValue() == FaceValue.FIVE)
                 {
-                    cards.add(cards.remove(0));
+                    Collections.rotate(cards, -1);
                 }
                 break;
             }
@@ -100,7 +101,7 @@ public class DefaultHandEvaluator implements HandEvaluator
                 // needs to be moved to the end.
                 if (cards.get(0).getValue() != cards.get(1).getValue())
                 {
-                    cards.add(cards.remove(0));
+                    Collections.rotate(cards, -1);
                 }
                 break;
             }
@@ -110,8 +111,7 @@ public class DefaultHandEvaluator implements HandEvaluator
                 // is first, it needs to be moved to the end.
                 if (cards.get(2).getValue() != cards.get(0).getValue()) // 3rd card is not the same as 1st.
                 {
-                    cards.add(cards.remove(0)); // Shift first card to the end.
-                    cards.add(cards.remove(0)); // Shift second (now first) card to the end.
+                    Collections.rotate(cards, -2);
                 }
                 break;
             }
@@ -127,7 +127,7 @@ public class DefaultHandEvaluator implements HandEvaluator
                 // it needs to be moved.
                 if (cards.get(0).getValue() != cards.get(1).getValue()) // Kicker is first card.
                 {
-                    cards.add(cards.remove(0));
+                    Collections.rotate(cards, -1);
                 }
                 else if (cards.get(2).getValue() != cards.get(3).getValue()) // Kicker is third card.
                 {

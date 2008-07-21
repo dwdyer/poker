@@ -1,6 +1,7 @@
 package org.uncommons.util;
 
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Utility methods for manipulating lists.
@@ -30,18 +31,8 @@ public class ListUtils
             for (int j = 0; j < length; j++)
             {
                 int index = (start - i) + j;
-                swap(list, index, index - 1);
+                Collections.swap(list, index, index - 1);
             }
         }
-    }
-
-
-    private static <T> void swap(List<T> list,
-                                 int index1,
-                                 int index2)
-    {
-        T temp = list.get(index1);
-        list.set(index1, list.get(index2));
-        list.set(index2, temp);
     }
 }
