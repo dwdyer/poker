@@ -14,11 +14,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testRoyalFlush()
     {
-        List<PlayingCard> cards = asList(PlayingCard.TEN_OF_SPADES,
-                                         PlayingCard.QUEEN_OF_SPADES,
-                                         PlayingCard.ACE_OF_SPADES,
+        List<PlayingCard> cards = asList(PlayingCard.ACE_OF_SPADES,
                                          PlayingCard.KING_OF_SPADES,
-                                         PlayingCard.JACK_OF_SPADES);
+                                         PlayingCard.QUEEN_OF_SPADES,
+                                         PlayingCard.JACK_OF_SPADES,
+                                         PlayingCard.TEN_OF_SPADES);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.ROYAL_FLUSH : "Wrong hand ranking: " + hand.getRanking();
         // The ace is the most significant card, the ten the least.
@@ -33,11 +33,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testStraightFlush()
     {
-        List<PlayingCard> cards = asList(PlayingCard.FOUR_OF_HEARTS,
-                                         PlayingCard.FIVE_OF_HEARTS,
-                                         PlayingCard.SIX_OF_HEARTS,
+        List<PlayingCard> cards = asList(PlayingCard.EIGHT_OF_HEARTS,
                                          PlayingCard.SEVEN_OF_HEARTS,
-                                         PlayingCard.EIGHT_OF_HEARTS);
+                                         PlayingCard.SIX_OF_HEARTS,
+                                         PlayingCard.FIVE_OF_HEARTS,
+                                         PlayingCard.FOUR_OF_HEARTS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.STRAIGHT_FLUSH : "Wrong hand ranking: " + hand.getRanking();
         // The eight is the most significant card, the four the least.
@@ -56,10 +56,10 @@ public class DefaultHandEvaluatorTest
     public void testLowStraightFlush()
     {
         List<PlayingCard> cards = asList(PlayingCard.ACE_OF_DIAMONDS,
-                                         PlayingCard.TWO_OF_DIAMONDS,
-                                         PlayingCard.THREE_OF_DIAMONDS,
+                                         PlayingCard.FIVE_OF_DIAMONDS,
                                          PlayingCard.FOUR_OF_DIAMONDS,
-                                         PlayingCard.FIVE_OF_DIAMONDS);
+                                         PlayingCard.THREE_OF_DIAMONDS,
+                                         PlayingCard.TWO_OF_DIAMONDS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.STRAIGHT_FLUSH : "Wrong hand ranking: " + hand.getRanking();
         // The five is the most significant card, the ace the least.
@@ -74,11 +74,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testFourOfAKind()
     {
-        List<PlayingCard> cards = asList(PlayingCard.KING_OF_CLUBS,
-                                         PlayingCard.TWO_OF_DIAMONDS,
-                                         PlayingCard.KING_OF_DIAMONDS,
+        List<PlayingCard> cards = asList(PlayingCard.KING_OF_SPADES,
                                          PlayingCard.KING_OF_HEARTS,
-                                         PlayingCard.KING_OF_SPADES);
+                                         PlayingCard.KING_OF_DIAMONDS,
+                                         PlayingCard.KING_OF_CLUBS,
+                                         PlayingCard.TWO_OF_DIAMONDS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.FOUR_OF_A_KIND : "Wrong hand ranking: " + hand.getRanking();
         // The kicker should be the least significant card.
@@ -93,11 +93,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testFourOfAKindHighKicker()
     {
-        List<PlayingCard> cards = asList(PlayingCard.FOUR_OF_CLUBS,
-                                         PlayingCard.NINE_OF_DIAMONDS,
-                                         PlayingCard.FOUR_OF_DIAMONDS,
+        List<PlayingCard> cards = asList(PlayingCard.FOUR_OF_SPADES,
                                          PlayingCard.FOUR_OF_HEARTS,
-                                         PlayingCard.FOUR_OF_SPADES);
+                                         PlayingCard.FOUR_OF_DIAMONDS,
+                                         PlayingCard.FOUR_OF_CLUBS,
+                                         PlayingCard.NINE_OF_DIAMONDS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.FOUR_OF_A_KIND : "Wrong hand ranking: " + hand.getRanking();
         // The kicker should be the least significant card.
@@ -108,11 +108,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testFullHouse()
     {
-        List<PlayingCard> cards = asList(PlayingCard.SEVEN_OF_CLUBS,
-                                         PlayingCard.SEVEN_OF_SPADES,
-                                         PlayingCard.JACK_OF_DIAMONDS,
+        List<PlayingCard> cards = asList(PlayingCard.JACK_OF_SPADES,
                                          PlayingCard.JACK_OF_HEARTS,
-                                         PlayingCard.JACK_OF_SPADES);
+                                         PlayingCard.JACK_OF_DIAMONDS,
+                                         PlayingCard.SEVEN_OF_SPADES,
+                                         PlayingCard.SEVEN_OF_CLUBS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.FULL_HOUSE : "Wrong hand ranking: " + hand.getRanking();
         // Trips are more important than the pair.
@@ -127,11 +127,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testFullHouseLowTrips()
     {
-        List<PlayingCard> cards = asList(PlayingCard.KING_OF_CLUBS,
-                                         PlayingCard.KING_OF_SPADES,
-                                         PlayingCard.TWO_OF_DIAMONDS,
+        List<PlayingCard> cards = asList(PlayingCard.KING_OF_SPADES,
+                                         PlayingCard.KING_OF_CLUBS,
+                                         PlayingCard.TWO_OF_SPADES,
                                          PlayingCard.TWO_OF_HEARTS,
-                                         PlayingCard.TWO_OF_SPADES);
+                                         PlayingCard.TWO_OF_DIAMONDS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.FULL_HOUSE : "Wrong hand ranking: " + hand.getRanking();
         // Trips are more important than the pair, even though they are lower.
@@ -146,11 +146,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testFlush()
     {
-        List<PlayingCard> cards = asList(PlayingCard.FOUR_OF_CLUBS,
-                                         PlayingCard.SIX_OF_CLUBS,
-                                         PlayingCard.EIGHT_OF_CLUBS,
+        List<PlayingCard> cards = asList(PlayingCard.QUEEN_OF_CLUBS,
                                          PlayingCard.NINE_OF_CLUBS,
-                                         PlayingCard.QUEEN_OF_CLUBS);
+                                         PlayingCard.EIGHT_OF_CLUBS,
+                                         PlayingCard.SIX_OF_CLUBS,
+                                         PlayingCard.FOUR_OF_CLUBS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.FLUSH : "Wrong hand ranking: " + hand.getRanking();
         // The queen is the most significant card, the four the least.
@@ -168,10 +168,10 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testFlushDraw()
     {
-        List<PlayingCard> cards = asList(PlayingCard.FOUR_OF_CLUBS,
-                                         PlayingCard.SIX_OF_CLUBS,
+        List<PlayingCard> cards = asList(PlayingCard.NINE_OF_CLUBS,
                                          PlayingCard.EIGHT_OF_CLUBS,
-                                         PlayingCard.NINE_OF_CLUBS);
+                                         PlayingCard.SIX_OF_CLUBS,
+                                         PlayingCard.FOUR_OF_CLUBS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.HIGH_CARD : "Wrong hand ranking: " + hand.getRanking();
     }
@@ -180,11 +180,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testStraight()
     {
-        List<PlayingCard> cards = asList(PlayingCard.SEVEN_OF_DIAMONDS,
-                                         PlayingCard.SIX_OF_CLUBS,
+        List<PlayingCard> cards = asList(PlayingCard.TEN_OF_HEARTS,
                                          PlayingCard.NINE_OF_HEARTS,
-                                         PlayingCard.TEN_OF_HEARTS,
-                                         PlayingCard.EIGHT_OF_SPADES);
+                                         PlayingCard.EIGHT_OF_SPADES,
+                                         PlayingCard.SEVEN_OF_DIAMONDS,
+                                         PlayingCard.SIX_OF_CLUBS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.STRAIGHT : "Wrong hand ranking: " + hand.getRanking();
         // The ten is the most significant card, the six the least.
@@ -202,10 +202,10 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testOpenEndedStraightDraw()
     {
-        List<PlayingCard> cards = asList(PlayingCard.SEVEN_OF_DIAMONDS,
-                                         PlayingCard.SIX_OF_CLUBS,
-                                         PlayingCard.NINE_OF_HEARTS,
-                                         PlayingCard.EIGHT_OF_SPADES);
+        List<PlayingCard> cards = asList(PlayingCard.NINE_OF_HEARTS,
+                                         PlayingCard.EIGHT_OF_SPADES,
+                                         PlayingCard.SEVEN_OF_DIAMONDS,
+                                         PlayingCard.SIX_OF_CLUBS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.HIGH_CARD : "Wrong hand ranking: " + hand.getRanking();
     }
@@ -217,10 +217,10 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testGutshotStraightDraw()
     {
-        List<PlayingCard> cards = asList(PlayingCard.SEVEN_OF_DIAMONDS,
-                                         PlayingCard.SIX_OF_CLUBS,
+        List<PlayingCard> cards = asList(PlayingCard.TEN_OF_SPADES,
                                          PlayingCard.NINE_OF_HEARTS,
-                                         PlayingCard.TEN_OF_SPADES);
+                                         PlayingCard.SEVEN_OF_DIAMONDS,
+                                         PlayingCard.SIX_OF_CLUBS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.HIGH_CARD : "Wrong hand ranking: " + hand.getRanking();
     }
@@ -233,10 +233,10 @@ public class DefaultHandEvaluatorTest
     public void testLowStraight()
     {
         List<PlayingCard> cards = asList(PlayingCard.ACE_OF_DIAMONDS,
-                                         PlayingCard.TWO_OF_CLUBS,
-                                         PlayingCard.THREE_OF_HEARTS,
+                                         PlayingCard.FIVE_OF_SPADES,
                                          PlayingCard.FOUR_OF_HEARTS,
-                                         PlayingCard.FIVE_OF_SPADES);
+                                         PlayingCard.THREE_OF_HEARTS,
+                                         PlayingCard.TWO_OF_CLUBS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.STRAIGHT : "Wrong hand ranking: " + hand.getRanking();
         // The five is the most significant card, the ace the least.
@@ -255,11 +255,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testWrapAround()
     {
-        List<PlayingCard> cards = asList(PlayingCard.QUEEN_OF_DIAMONDS,
+        List<PlayingCard> cards = asList(PlayingCard.ACE_OF_DIAMONDS,
                                          PlayingCard.KING_OF_SPADES,
-                                         PlayingCard.ACE_OF_DIAMONDS,
-                                         PlayingCard.TWO_OF_CLUBS,
-                                         PlayingCard.THREE_OF_HEARTS);
+                                         PlayingCard.QUEEN_OF_DIAMONDS,
+                                         PlayingCard.THREE_OF_HEARTS,
+                                         PlayingCard.TWO_OF_CLUBS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.HIGH_CARD : "Wrong hand ranking: " + hand.getRanking();
     }
@@ -268,11 +268,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testThreeOfAKind()
     {
-        List<PlayingCard> cards = asList(PlayingCard.TWO_OF_CLUBS,
-                                         PlayingCard.KING_OF_SPADES,
-                                         PlayingCard.TWO_OF_DIAMONDS,
+        List<PlayingCard> cards = asList(PlayingCard.KING_OF_SPADES,
+                                         PlayingCard.THREE_OF_HEARTS,
                                          PlayingCard.TWO_OF_HEARTS,
-                                         PlayingCard.THREE_OF_HEARTS);
+                                         PlayingCard.TWO_OF_DIAMONDS,
+                                         PlayingCard.TWO_OF_CLUBS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.THREE_OF_A_KIND : "Wrong hand ranking: " + hand.getRanking();
     }
@@ -281,11 +281,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testTwoPair()
     {
-        List<PlayingCard> cards = asList(PlayingCard.SIX_OF_CLUBS,
-                                         PlayingCard.KING_OF_SPADES,
+        List<PlayingCard> cards = asList(PlayingCard.KING_OF_SPADES,
+                                         PlayingCard.KING_OF_DIAMONDS,
                                          PlayingCard.SIX_OF_HEARTS,
-                                         PlayingCard.TWO_OF_HEARTS,
-                                         PlayingCard.KING_OF_DIAMONDS);
+                                         PlayingCard.SIX_OF_CLUBS,
+                                         PlayingCard.TWO_OF_HEARTS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.TWO_PAIR : "Wrong hand ranking: " + hand.getRanking();        
     }
@@ -294,11 +294,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testPair()
     {
-        List<PlayingCard> cards = asList(PlayingCard.SIX_OF_CLUBS,
-                                         PlayingCard.THREE_OF_DIAMONDS,
+        List<PlayingCard> cards = asList(PlayingCard.KING_OF_DIAMONDS,
                                          PlayingCard.SEVEN_OF_CLUBS,
+                                         PlayingCard.SIX_OF_CLUBS,
                                          PlayingCard.THREE_OF_SPADES,
-                                         PlayingCard.KING_OF_DIAMONDS);
+                                         PlayingCard.THREE_OF_DIAMONDS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.PAIR : "Wrong hand ranking: " + hand.getRanking();
     }
@@ -307,11 +307,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testHighCard()
     {
-        List<PlayingCard> cards = asList(PlayingCard.SIX_OF_CLUBS,
-                                         PlayingCard.THREE_OF_DIAMONDS,
-                                         PlayingCard.SEVEN_OF_CLUBS,
+        List<PlayingCard> cards = asList(PlayingCard.KING_OF_DIAMONDS,
                                          PlayingCard.QUEEN_OF_CLUBS,
-                                         PlayingCard.KING_OF_DIAMONDS);
+                                         PlayingCard.SEVEN_OF_CLUBS,
+                                         PlayingCard.SIX_OF_CLUBS,
+                                         PlayingCard.THREE_OF_DIAMONDS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.HIGH_CARD : "Wrong hand ranking: " + hand.getRanking();
         assert hand.getCards().get(0) == PlayingCard.KING_OF_DIAMONDS : "Wrong high card.";
@@ -325,11 +325,11 @@ public class DefaultHandEvaluatorTest
     @Test
     public void testAceHigh()
     {
-        List<PlayingCard> cards = asList(PlayingCard.SIX_OF_CLUBS,
-                                         PlayingCard.THREE_OF_DIAMONDS,
-                                         PlayingCard.ACE_OF_CLUBS,
+        List<PlayingCard> cards = asList(PlayingCard.ACE_OF_CLUBS,
+                                         PlayingCard.KING_OF_DIAMONDS,
                                          PlayingCard.QUEEN_OF_CLUBS,
-                                         PlayingCard.KING_OF_DIAMONDS);
+                                         PlayingCard.SIX_OF_CLUBS,
+                                         PlayingCard.THREE_OF_DIAMONDS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.HIGH_CARD : "Wrong hand ranking: " + hand.getRanking();
         assert hand.getCards().get(0) == PlayingCard.ACE_OF_CLUBS : "Wrong high card.";
