@@ -7,6 +7,7 @@ import org.uncommons.poker.game.cards.DefaultHandEvaluator;
 import org.uncommons.maths.combinatorics.CombinationGenerator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Daniel Dyer
@@ -24,6 +25,11 @@ public class TexasHoldem implements PokerRules
         List<PlayingCard> allCards = new ArrayList<PlayingCard>(playerCards.size() + communityCards.size());
         allCards.addAll(playerCards);
         allCards.addAll(communityCards);
+        
+        // If we sort the cards passed into the combination generator, all of the combinations will
+        // automatically be sorted too.  This saves us a lot of work when evaluating the different
+        // combinations.
+        Collections.sort(allCards, Collections.reverseOrder());
 
         CombinationGenerator<PlayingCard> generator = new CombinationGenerator<PlayingCard>(allCards,
                                                                                             RankedHand.HAND_SIZE);

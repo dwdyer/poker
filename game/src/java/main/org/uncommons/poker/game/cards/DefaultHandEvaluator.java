@@ -1,6 +1,5 @@
 package org.uncommons.poker.game.cards;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 import org.uncommons.poker.game.Suit;
@@ -11,14 +10,17 @@ import org.uncommons.util.ListUtils;
  */
 public class DefaultHandEvaluator implements HandEvaluator
 {
+    /**
+     * @param cards The cards that make up a hand.  These must be sorted in descending
+     * order of face value.
+     * @return A ranked hand.
+     */
     public RankedHand evaluate(List<PlayingCard> cards)
     {
         if (cards.size() > RankedHand.HAND_SIZE)
         {
             throw new IllegalArgumentException("Hand must contain no more than " + RankedHand.HAND_SIZE + " cards.");
         }
-        // Sort cards by rank, highest first.
-        Collections.sort(cards, Collections.reverseOrder());
 
         HandRanking handRanking = rankHand(cards);
         orderCards(cards, handRanking);
