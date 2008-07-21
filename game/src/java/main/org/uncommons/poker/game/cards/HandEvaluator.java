@@ -8,7 +8,7 @@ import java.util.List;
 public interface HandEvaluator
 {
     /**
-     * @param cards A list of no more than five cards.
+     * @param cards A list of cards that can be used to make the 5-card hand.
      * @return The highest possible ranking for this hand.
      */
     RankedHand evaluate(List<PlayingCard> cards);

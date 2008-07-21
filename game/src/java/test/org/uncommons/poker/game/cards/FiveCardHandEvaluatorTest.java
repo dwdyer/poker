@@ -7,9 +7,9 @@ import org.testng.annotations.Test;
 /**
  * @author Daniel Dyer
  */
-public class DefaultHandEvaluatorTest
+public class FiveCardHandEvaluatorTest
 {
-    private final HandEvaluator handEvaluator = new DefaultHandEvaluator();
+    private final HandEvaluator handEvaluator = new FiveCardHandEvaluator();
 
     @Test
     public void testRoyalFlush()

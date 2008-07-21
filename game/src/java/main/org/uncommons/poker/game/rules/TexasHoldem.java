@@ -3,7 +3,8 @@ package org.uncommons.poker.game.rules;
 import org.uncommons.poker.game.cards.RankedHand;
 import org.uncommons.poker.game.cards.PlayingCard;
 import org.uncommons.poker.game.cards.HandEvaluator;
-import org.uncommons.poker.game.cards.DefaultHandEvaluator;
+import org.uncommons.poker.game.cards.FiveCardHandEvaluator;
+import org.uncommons.poker.game.cards.SevenCardHandEvaluator;
 import org.uncommons.maths.combinatorics.CombinationGenerator;
 import java.util.List;
 import java.util.ArrayList;
@@ -14,7 +15,8 @@ import java.util.Collections;
  */
 public class TexasHoldem implements PokerRules
 {
-    private static final HandEvaluator HAND_EVALUATOR = new DefaultHandEvaluator();
+    private static final HandEvaluator HAND_EVALUATOR = new SevenCardHandEvaluator();
+
 
     public RankedHand rankHand(List<PlayingCard> playerCards,
                                List<PlayingCard> communityCards)
@@ -25,24 +27,10 @@ public class TexasHoldem implements PokerRules
         List<PlayingCard> allCards = new ArrayList<PlayingCard>(playerCards.size() + communityCards.size());
         allCards.addAll(playerCards);
         allCards.addAll(communityCards);
-        
-        // If we sort the cards passed into the combination generator, all of the combinations will
-        // automatically be sorted too.  This saves us a lot of work when evaluating the different
-        // combinations.
+
+        // The seven-card evaluator expects the cards to be sorted.
         Collections.sort(allCards, Collections.reverseOrder());
 
-        CombinationGenerator<PlayingCard> generator = new CombinationGenerator<PlayingCard>(allCards,
-                                                                                            RankedHand.HAND_SIZE);
-
-        RankedHand bestHand = null;
-        while (generator.hasMore())
-        {
-            RankedHand next = HAND_EVALUATOR.evaluate(generator.nextCombinationAsList());
-            if (bestHand == null || next.compareTo(bestHand) > 0)
-            {
-                bestHand = next;
-            }
-        }
-        return bestHand;
+        return HAND_EVALUATOR.evaluate(allCards);
     }
 }

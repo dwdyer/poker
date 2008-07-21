@@ -6,9 +6,13 @@ import org.uncommons.poker.game.Suit;
 import org.uncommons.util.ListUtils;
 
 /**
+ * {@link HandEvaluator} implementation that ranks 5-card hands.  This implementation can be
+ * used for all poker variants if we first generate all possible 5-card combinations for a
+ * player (by combining hole cards and community cards according to the rules of the game),
+ * and then rank them all and keep the best.
  * @author Daniel Dyer
  */
-public class DefaultHandEvaluator implements HandEvaluator
+public class FiveCardHandEvaluator implements HandEvaluator
 {
     /**
      * @param cards The cards that make up a hand.  These must be sorted in descending
