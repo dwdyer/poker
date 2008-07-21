@@ -3,13 +3,15 @@ package org.uncommons.poker.game.cards;
 import java.util.Collections;
 import java.util.Random;
 import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @author Daniel Dyer
  */
 public class Deck
 {
-    private final Stack<PlayingCard> cards = new Stack<PlayingCard>();
+    private final List<PlayingCard> cards = new ArrayList<PlayingCard>(52);
 
     private Deck(PlayingCard[] cards, Random rng)
     {
@@ -23,7 +25,7 @@ public class Deck
     
     public PlayingCard dealCard()
     {
-        return cards.pop();
+        return cards.remove(cards.size() - 1);
     }
 
 

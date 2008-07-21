@@ -1,7 +1,6 @@
 package org.uncommons.poker.game.cards;
 
 import java.util.List;
-import java.util.RandomAccess;
 import org.uncommons.poker.game.Suit;
 import org.uncommons.util.ListUtils;
 
@@ -174,19 +173,18 @@ public class DefaultHandEvaluator implements HandEvaluator
      */
     private int countPairs(List<PlayingCard> cards)
     {
-        assert cards instanceof RandomAccess : "This is going to be slow.";
-
         int pairs = 0;
-        // For each card, check how many of the subsequent cards its value matches.
+        int runLength = 1;
         for (int i = 0; i < cards.size() - 1; i++)
         {
-            FaceValue firstCard = cards.get(i).getValue();
-            for (int j = i + 1; j < cards.size(); j++)
+            if (cards.get(i).getValue() == cards.get(i + 1).getValue())
             {
-                if (firstCard == cards.get(j).getValue())
-                {
-                    ++pairs;
-                }
+                ++runLength;
+                pairs += runLength - 1;
+            }
+            else
+            {
+                runLength = 1;
             }
         }
         return pairs;
@@ -202,14 +200,10 @@ public class DefaultHandEvaluator implements HandEvaluator
         {
             return false;
         }
-        Suit lastSuit = null;
-        for (PlayingCard card : cards)
+        Suit suit = cards.get(0).getSuit();
+        for (int i = 1; i < cards.size(); i++)
         {
-            if (lastSuit == null || card.getSuit().equals(lastSuit))
-            {
-                lastSuit = card.getSuit();
-            }
-            else
+            if (cards.get(i).getSuit() != suit)
             {
                 return false;
             }

@@ -40,7 +40,7 @@ public final class RankedHand implements Comparable<RankedHand>
 
     public int compareTo(RankedHand otherHand)
     {
-        int compare = this.ranking.compareTo(otherHand.getRanking());
+        int compare = this.ranking.ordinal() - otherHand.getRanking().ordinal();
         // If the hands have the same ranking, check the actual cards.  For example,
         // both may be ranked as PAIR, but one may be a pair of threes and the other
         // a pair of kings.
@@ -50,7 +50,7 @@ public final class RankedHand implements Comparable<RankedHand>
             assert otherCards instanceof RandomAccess : "Performance problem.";
             for (int i = 0; i < cards.size(); i++)
             {
-                compare = cards.get(i).compareTo(otherCards.get(i));
+                compare = cards.get(i).ordinal() - otherCards.get(i).ordinal();
                 if (compare != 0)
                 {
                     break;
