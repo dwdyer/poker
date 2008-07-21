@@ -23,10 +23,12 @@ public class StartingHands
 {
     public static void main(String[] args)
     {
+        int iterations = Integer.parseInt(args[0]);
+        
         long start = System.currentTimeMillis();
         StartingHands startingHands = new StartingHands();
         Map<String, StartingHandInfo> info = startingHands.simulate(2,
-                                                                    1000000,
+                                                                    iterations,
                                                                     new TexasHoldem(),
                                                                     new MersenneTwisterRNG());
         long elapsed = System.currentTimeMillis() - start;
@@ -161,14 +163,7 @@ public class StartingHands
     private String getStartingHandClassification(List<PlayingCard> cards)
     {
         // Sort to ensure that card1 is the highest ranked.
-        Collections.sort(cards, new Comparator<PlayingCard>()
-        {
-            public int compare(PlayingCard card1, PlayingCard card2)
-            {
-                // Descending order.
-                return card2.getValue().compareTo(card1.getValue());
-            }
-        });
+        Collections.sort(cards, Collections.reverseOrder());
 
         StringBuilder buffer = new StringBuilder();
         for (PlayingCard card : cards)
