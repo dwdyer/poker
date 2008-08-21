@@ -49,11 +49,7 @@ public class SevenCardHandEvaluator implements HandEvaluator
             }
         });
 
-        RankedHand straightOrFlushHand = checkForFlush(cards);
-        if (straightOrFlushHand == null)
-        {
-            straightOrFlushHand = checkForStraight(cards);
-        }
+        RankedHand straightOrFlushHand = checkForStraightOrFlush(cards);
         RankedHand nonStraightOrFlushHand = convertGroupsToRankedHand(groupedByValue);
 
         if (straightOrFlushHand != null && straightOrFlushHand.compareTo(nonStraightOrFlushHand) > 0)
@@ -104,7 +100,41 @@ public class SevenCardHandEvaluator implements HandEvaluator
      * @return A ranked hand if these cards include a flush, straight flush or royal flush;
      * null otherwise.
      */
-    private RankedHand checkForFlush(List<PlayingCard> cards)
+    private RankedHand checkForStraightOrFlush(List<PlayingCard> cards)
+    {
+        List<PlayingCard> flushCards = filterFlushCards(cards);
+        if (flushCards != null)
+        {
+            HandRanking ranking = HandRanking.FLUSH;
+            // If the hand is also a straight, then this is more than just a flush...
+            RankedHand straight = checkForStraight(flushCards);
+            if (straight != null)
+            {
+                flushCards = straight.getCards();
+                ranking = flushCards.get(0).getValue() == FaceValue.ACE ? HandRanking.ROYAL_FLUSH
+                                                                        : HandRanking.STRAIGHT_FLUSH;
+            }
+            else if (flushCards.size() > RankedHand.HAND_SIZE)
+            {
+                flushCards = flushCards.subList(0, RankedHand.HAND_SIZE);
+            }
+            return new RankedHand(flushCards, ranking);
+        }
+        else
+        {
+            return checkForStraight(cards);
+        }
+    }
+
+
+    /**
+     * Takes a list of playing cards and if 5 or more of them have the same suit, they are returned.
+     * The list returned will contain 5 or more cards or it will be null if there is no flush to be
+     * made from the speficied cards.  The reason for potentially returning more than 5 cards is that,
+     * because we haven't yet checked for a straight flush, we don't know whether we might still need
+     * the lower ranked cards.
+     */
+    private List<PlayingCard> filterFlushCards(List<PlayingCard> cards)
     {
         int[] suitCounts = new int[4];
 
@@ -125,26 +155,11 @@ public class SevenCardHandEvaluator implements HandEvaluator
                     if (card.getSuit() == suit)
                     {
                         flush.add(card);
-                        if (flush.size() == RankedHand.HAND_SIZE)
-                        {
-                            break;
-                        }
                     }
                 }
-
-                HandRanking ranking = HandRanking.FLUSH;
-                // If the hand is also a straight, then this is more than just a flush...
-                if (flush.get(0).getValue().ordinal() - flush.get(RankedHand.HAND_SIZE - 1).ordinal()
-                    == RankedHand.HAND_SIZE - 1)
-                {
-                    ranking = flush.get(0).getValue() == FaceValue.ACE ? HandRanking.ROYAL_FLUSH
-                                                                       : HandRanking.STRAIGHT_FLUSH;
-                }
-                return new RankedHand(flush, ranking);
-
+                return flush;
             }
         }
-
         return null;
     }
 
@@ -162,7 +177,7 @@ public class SevenCardHandEvaluator implements HandEvaluator
         int length = 1;
         for (int i = 1; i < cards.size(); i++)
         {
-            if (cards.get(i).getValue().ordinal() == cards.get(i - 1).getValue().ordinal() - 1)
+            if (assertConsecutiveRanks(cards.get(i), cards.get(i - 1)))
             {
                 ++length;
                 if (length == RankedHand.HAND_SIZE)
@@ -171,11 +186,24 @@ public class SevenCardHandEvaluator implements HandEvaluator
                     return new RankedHand(straightCards, HandRanking.STRAIGHT);
                 }
             }
-            else
+            else if (cards.get(i).getValue() != cards.get(i - 1).getValue()) // If there are two consecutive cards of the same rank, skip over the second one.
             {
-                length = 1;
+                length = 1; // Otherwise this is not a straight.
             }
         }
         return null;
+    }
+
+
+    /**
+     * Returns true if the two cards would be next to each other in a straight, false otherwise.
+     * The first card has to be one rank lower than the second in order for this method to return
+     * true.  Also returns true when the first card is an ace and the second a two to account for
+     * a low straight: 5, 4, 3, 2, A.
+     */
+    private boolean assertConsecutiveRanks(PlayingCard card1, PlayingCard card2)
+    {
+        return (card1.getValue() == FaceValue.ACE && card2.getValue() == FaceValue.TWO)
+               || card1.getValue().ordinal() == card2.getValue().ordinal() - 1;
     }
 }
