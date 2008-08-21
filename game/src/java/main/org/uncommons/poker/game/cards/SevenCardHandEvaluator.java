@@ -174,21 +174,22 @@ public class SevenCardHandEvaluator implements HandEvaluator
             cards.add(highestCard); // Ace is also low.
         }
 
-        int length = 1;
+        List<PlayingCard> straightCards = new ArrayList<PlayingCard>(RankedHand.HAND_SIZE);
+        straightCards.add(cards.get(0));
         for (int i = 1; i < cards.size(); i++)
         {
             if (assertConsecutiveRanks(cards.get(i), cards.get(i - 1)))
             {
-                ++length;
-                if (length == RankedHand.HAND_SIZE)
+                straightCards.add(cards.get(i));
+                if (straightCards.size() == RankedHand.HAND_SIZE)
                 {
-                    List<PlayingCard> straightCards = cards.subList(i - (RankedHand.HAND_SIZE - 1), i + 1);
                     return new RankedHand(straightCards, HandRanking.STRAIGHT);
                 }
             }
             else if (cards.get(i).getValue() != cards.get(i - 1).getValue()) // If there are two consecutive cards of the same rank, skip over the second one.
             {
-                length = 1; // Otherwise this is not a straight.
+                straightCards.clear(); // Otherwise this is not a straight.
+                straightCards.add(cards.get(i));
             }
         }
         return null;
