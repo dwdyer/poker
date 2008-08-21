@@ -10,8 +10,9 @@ import org.uncommons.poker.game.Suit;
 /**
  * A {@link HandEvaluator} implementation that works on 7-card hands.  It assumes that any
  * 5 of the seven cards can be used to form the best 5-card hand.  This evaluator is suitable
- * for Texas Hold'em and 7-Card Stud but not for Omaha, which uses 9 cards and has more
- * restrictions on how cards may be used.
+ * for Texas Hold'em and 7-Card Stud but not for Omaha, which uses 4 hole cards and 5 community
+ * cards (9 cards in total) and has restrictions on how cards may be combined to make a 5-card
+ * hand.
  *
  * <i>For Omaha, first generate all valid 5-card combinations and then use
  * {@link FiveCardHandEvaluator}.  The same approach could also be used for Hold'em and
@@ -21,10 +22,53 @@ import org.uncommons.poker.game.Suit;
  */
 public class SevenCardHandEvaluator implements HandEvaluator
 {
+    private static final Comparator<List<PlayingCard>> LIST_SIZE_COMPARATOR = new Comparator<List<PlayingCard>>()
+    {
+        public int compare(List<PlayingCard> cards1, List<PlayingCard> cards2)
+        {
+            return cards2.size() - cards1.size(); // Reverse order.
+        }
+    };
+
+
     /**
      * {@inheritDoc}
      */
     public RankedHand evaluate(List<PlayingCard> cards)
+    {
+        // First check for straight, flush or straight flush.
+        RankedHand rankedHand = rankStraightOrFlush(cards);
+
+        List<List<PlayingCard>> groupedByValue = groupByValue(cards);
+
+        List<PlayingCard> hand = new ArrayList<PlayingCard>(5);
+        outerLoop: for (List<PlayingCard> group : groupedByValue)
+        {
+            for (PlayingCard card : group)
+            {
+                hand.add(card);
+                if (hand.size() == RankedHand.HAND_SIZE)
+                {
+                    break outerLoop;
+                }
+            }
+        }
+
+        HandRanking handRanking = rankGroups(groupedByValue);
+        if (rankedHand == null || handRanking.compareTo(rankedHand.getRanking()) > 0)
+        {
+            rankedHand = new RankedHand(hand, handRanking);
+        }
+
+        return rankedHand;
+    }
+
+
+    /**
+     * Group the cards by rank.  If there are no pairs, trips or quads, there will be 7 groups
+     * each with one member.
+     */
+    private List<List<PlayingCard>> groupByValue(List<PlayingCard> cards)
     {
         List<List<PlayingCard>> groupedByValue = new ArrayList<List<PlayingCard>>(7);
 
@@ -41,43 +85,8 @@ public class SevenCardHandEvaluator implements HandEvaluator
             group.add(card);
         }
         groupedByValue.add(group);
-        Collections.sort(groupedByValue, new Comparator<List<PlayingCard>>()
-        {
-            public int compare(List<PlayingCard> cards1, List<PlayingCard> cards2)
-            {
-                return cards2.size() - cards1.size(); // Reverse order.
-            }
-        });
-
-        RankedHand straightOrFlushHand = checkForStraightOrFlush(cards);
-        RankedHand nonStraightOrFlushHand = convertGroupsToRankedHand(groupedByValue);
-
-        if (straightOrFlushHand != null && straightOrFlushHand.compareTo(nonStraightOrFlushHand) > 0)
-        {
-            return straightOrFlushHand;
-        }
-        else
-        {
-            return nonStraightOrFlushHand;
-        }
-    }
-
-
-    private RankedHand convertGroupsToRankedHand(List<List<PlayingCard>> groupedByValue)
-    {
-        List<PlayingCard> cards = new ArrayList<PlayingCard>(5);
-        outerLoop: for (List<PlayingCard> group : groupedByValue)
-        {
-            for (PlayingCard card : group)
-            {
-                cards.add(card);
-                if (cards.size() == RankedHand.HAND_SIZE)
-                {
-                    break outerLoop;
-                }
-            }
-        }
-        return new RankedHand(cards, rankGroups(groupedByValue));
+        Collections.sort(groupedByValue, LIST_SIZE_COMPARATOR);
+        return groupedByValue;
     }
 
 
@@ -100,7 +109,7 @@ public class SevenCardHandEvaluator implements HandEvaluator
      * @return A ranked hand if these cards include a flush, straight flush or royal flush;
      * null otherwise.
      */
-    private RankedHand checkForStraightOrFlush(List<PlayingCard> cards)
+    private RankedHand rankStraightOrFlush(List<PlayingCard> cards)
     {
         List<PlayingCard> flushCards = filterFlushCards(cards);
         if (flushCards != null)
@@ -114,10 +123,12 @@ public class SevenCardHandEvaluator implements HandEvaluator
                 ranking = flushCards.get(0).getValue() == FaceValue.ACE ? HandRanking.ROYAL_FLUSH
                                                                         : HandRanking.STRAIGHT_FLUSH;
             }
-            else if (flushCards.size() > RankedHand.HAND_SIZE)
+            // We only need 5 cards to make a flush.
+            while (flushCards.size() > RankedHand.HAND_SIZE)
             {
-                flushCards = flushCards.subList(0, RankedHand.HAND_SIZE);
+                flushCards.remove(flushCards.size() - 1);
             }
+            
             return new RankedHand(flushCards, ranking);
         }
         else
@@ -186,9 +197,11 @@ public class SevenCardHandEvaluator implements HandEvaluator
                     return new RankedHand(straightCards, HandRanking.STRAIGHT);
                 }
             }
-            else if (cards.get(i).getValue() != cards.get(i - 1).getValue()) // If there are two consecutive cards of the same rank, skip over the second one.
+            // If there are two consecutive cards of the same rank, skip over the second one.
+            else if (cards.get(i).getValue() != cards.get(i - 1).getValue())
             {
-                straightCards.clear(); // Otherwise this is not a straight.
+                // If we get to here, the card we're looking at is not part of a straight.
+                straightCards.clear();
                 straightCards.add(cards.get(i));
             }
         }
@@ -204,7 +217,7 @@ public class SevenCardHandEvaluator implements HandEvaluator
      */
     private boolean assertConsecutiveRanks(PlayingCard card1, PlayingCard card2)
     {
-        return (card1.getValue() == FaceValue.ACE && card2.getValue() == FaceValue.TWO)
-               || card1.getValue().ordinal() == card2.getValue().ordinal() - 1;
+        return card1.getValue().ordinal() == card2.getValue().ordinal() - 1
+               || (card1.getValue() == FaceValue.ACE && card2.getValue() == FaceValue.TWO);
     }
 }
