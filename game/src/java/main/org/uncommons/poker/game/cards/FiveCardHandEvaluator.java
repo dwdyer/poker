@@ -15,9 +15,7 @@ import org.uncommons.util.ListUtils;
 public class FiveCardHandEvaluator implements HandEvaluator
 {
     /**
-     * @param cards The cards that make up a hand.  These must be sorted in descending
-     * order of face value.
-     * @return A ranked hand.
+     * {@inheritDoc}
      */
     public RankedHand evaluate(List<PlayingCard> cards)
     {

@@ -163,9 +163,12 @@ public class StartingHands
     private String getStartingHandClassification(List<PlayingCard> cards)
     {
         // Sort to ensure that card1 is the highest ranked.
-        Collections.sort(cards, Collections.reverseOrder());
+        if (cards.get(0).compareTo(cards.get(1)) < 0)
+        {
+            Collections.swap(cards, 0, 1);
+        }        
 
-        StringBuilder buffer = new StringBuilder();
+        StringBuilder buffer = new StringBuilder(3);
         for (PlayingCard card : cards)
         {
             buffer.append(card.getValue().getSymbol());

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.testng.annotations.Test;
 
 /**
+ * Unit test for {@link FiveCardHandEvaluator}.
  * @author Daniel Dyer
  */
 public class FiveCardHandEvaluatorTest

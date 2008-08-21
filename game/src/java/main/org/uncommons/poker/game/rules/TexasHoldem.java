@@ -1,14 +1,12 @@
 package org.uncommons.poker.game.rules;
 
-import org.uncommons.poker.game.cards.RankedHand;
-import org.uncommons.poker.game.cards.PlayingCard;
-import org.uncommons.poker.game.cards.HandEvaluator;
-import org.uncommons.poker.game.cards.FiveCardHandEvaluator;
-import org.uncommons.poker.game.cards.SevenCardHandEvaluator;
-import org.uncommons.maths.combinatorics.CombinationGenerator;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import org.uncommons.poker.game.cards.HandEvaluator;
+import org.uncommons.poker.game.cards.PlayingCard;
+import org.uncommons.poker.game.cards.RankedHand;
+import org.uncommons.poker.game.cards.SevenCardHandEvaluator;
 
 /**
  * @author Daniel Dyer

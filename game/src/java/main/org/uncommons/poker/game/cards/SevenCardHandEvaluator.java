@@ -3,17 +3,27 @@ package org.uncommons.poker.game.cards;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import org.uncommons.poker.game.Suit;
 
 /**
+ * A {@link HandEvaluator} implementation that works on 7-card hands.  It assumes that any
+ * 5 of the seven cards can be used to form the best 5-card hand.  This evaluator is suitable
+ * for Texas Hold'em and 7-Card Stud but not for Omaha, which uses 9 cards and has more
+ * restrictions on how cards may be used.
+ *
+ * <i>For Omaha, first generate all valid 5-card combinations and then use
+ * {@link FiveCardHandEvaluator}.  The same approach could also be used for Hold'em and
+ * Stud but this implementation is faster.</i>
+ * 
  * @author Daniel Dyer
  */
 public class SevenCardHandEvaluator implements HandEvaluator
 {
+    /**
+     * {@inheritDoc}
+     */
     public RankedHand evaluate(List<PlayingCard> cards)
     {
         List<List<PlayingCard>> groupedByValue = new ArrayList<List<PlayingCard>>(7);
@@ -96,39 +106,45 @@ public class SevenCardHandEvaluator implements HandEvaluator
      */
     private RankedHand checkForFlush(List<PlayingCard> cards)
     {
-        Map<Suit, List<PlayingCard>> groupedBySuit = new HashMap<Suit, List<PlayingCard>>();
-        groupedBySuit.put(Suit.CLUBS, new ArrayList<PlayingCard>(4));
-        groupedBySuit.put(Suit.DIAMONDS, new ArrayList<PlayingCard>(4));
-        groupedBySuit.put(Suit.HEARTS, new ArrayList<PlayingCard>(4));
-        groupedBySuit.put(Suit.SPADES, new ArrayList<PlayingCard>(4));
+        int[] suitCounts = new int[4];
 
         for (PlayingCard card : cards)
         {
-            groupedBySuit.get(card.getSuit()).add(card);
+            ++suitCounts[card.getSuit().ordinal()];
         }
 
-        for (List<PlayingCard> flush : groupedBySuit.values())
+        // If we have enough cards of one suit to make a flush, filter those cards into
+        // a new list.
+        for (Suit suit : Suit.values())
         {
-            if (flush.size() == RankedHand.HAND_SIZE)
+            if (suitCounts[suit.ordinal()] >= RankedHand.HAND_SIZE)
             {
+                List<PlayingCard> flush = new ArrayList<PlayingCard>(RankedHand.HAND_SIZE);
+                for (PlayingCard card : cards)
+                {
+                    if (card.getSuit() == suit)
+                    {
+                        flush.add(card);
+                        if (flush.size() == RankedHand.HAND_SIZE)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                HandRanking ranking = HandRanking.FLUSH;
+                // If the hand is also a straight, then this is more than just a flush...
                 if (flush.get(0).getValue().ordinal() - flush.get(RankedHand.HAND_SIZE - 1).ordinal()
                     == RankedHand.HAND_SIZE - 1)
                 {
-                    if (flush.get(0).getValue() == FaceValue.ACE)
-                    {
-                        return new RankedHand(flush, HandRanking.ROYAL_FLUSH);
-                    }
-                    else
-                    {
-                        return new RankedHand(flush, HandRanking.STRAIGHT_FLUSH);
-                    }
+                    ranking = flush.get(0).getValue() == FaceValue.ACE ? HandRanking.ROYAL_FLUSH
+                                                                       : HandRanking.STRAIGHT_FLUSH;
                 }
-                else
-                {
-                    return new RankedHand(flush, HandRanking.FLUSH);
-                }
+                return new RankedHand(flush, ranking);
+
             }
         }
+
         return null;
     }
 
@@ -152,7 +168,6 @@ public class SevenCardHandEvaluator implements HandEvaluator
                 if (length == RankedHand.HAND_SIZE)
                 {
                     List<PlayingCard> straightCards = cards.subList(i - (RankedHand.HAND_SIZE - 1), i + 1);
-                    assert straightCards.size() == RankedHand.HAND_SIZE : "Wrong straight length: " + straightCards.size();
                     return new RankedHand(straightCards, HandRanking.STRAIGHT);
                 }
             }

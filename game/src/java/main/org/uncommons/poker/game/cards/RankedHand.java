@@ -21,6 +21,10 @@ public final class RankedHand implements Comparable<RankedHand>
      */
     public RankedHand(List<PlayingCard> cards, HandRanking ranking)
     {
+        if (cards.size() > HAND_SIZE) // Fewer cards is OK (we maybe ranking incomplete hands).
+        {
+            throw new IllegalArgumentException("Too many cards.");
+        }
         this.cards = Collections.unmodifiableList(cards);
         this.ranking = ranking;
     }
