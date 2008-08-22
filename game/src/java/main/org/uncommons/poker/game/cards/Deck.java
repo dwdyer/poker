@@ -1,8 +1,5 @@
 package org.uncommons.poker.game.cards;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -10,27 +7,43 @@ import java.util.Random;
  */
 public class Deck
 {
-    private final List<PlayingCard> cards = new ArrayList<PlayingCard>(52);
+    private final PlayingCard[] deck;
+    private int index = 0;
 
     private Deck(PlayingCard[] cards, Random rng)
     {
-        for (PlayingCard card : cards)
+        this.deck = cards.clone();
+        // Fisher-Yates shuffle.
+        for (int i = deck.length; i > 1; i--)
         {
-            this.cards.add(card);
+            swap(deck, i - 1, rng.nextInt(i));
         }
-        Collections.shuffle(this.cards, rng);
+    }
+
+
+    private <T> void swap(T[] array, int index1, int index2)
+    {
+        T temp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = temp;
     }
 
     
     public PlayingCard dealCard()
     {
-        return cards.remove(cards.size() - 1);
+        if (index >= deck.length)
+        {
+            throw new IllegalStateException("Deck exhausted.");
+        }
+        PlayingCard card = deck[index];
+        ++index;
+        return card;
     }
 
 
     public int getRemainingCardCount()
     {
-        return cards.size();
+        return deck.length - index;
     }
 
 
