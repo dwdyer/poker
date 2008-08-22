@@ -32,9 +32,9 @@ public class TexasHoldemTest
         // Best hand is 3 aces.
         RankedHand hand = holdem.rankHand(holeCards, communityCards);
         assert hand.getRanking().equals(HandRanking.THREE_OF_A_KIND) : "Wrong hand ranking: " + hand.getRanking();
-        assert hand.getCards().contains(PlayingCard.ACE_OF_CLUBS) : "Hand should contain Ace of Clubs.";
-        assert hand.getCards().contains(PlayingCard.ACE_OF_CLUBS) : "Hand should contain Ace of Diamonds.";
-        assert hand.getCards().contains(PlayingCard.ACE_OF_CLUBS) : "Hand should contain Ace of Spades.";
+        assert hand.contains(PlayingCard.ACE_OF_CLUBS) : "Hand should contain Ace of Clubs.";
+        assert hand.contains(PlayingCard.ACE_OF_CLUBS) : "Hand should contain Ace of Diamonds.";
+        assert hand.contains(PlayingCard.ACE_OF_CLUBS) : "Hand should contain Ace of Spades.";
     }
 
     /**
@@ -54,8 +54,8 @@ public class TexasHoldemTest
         // Best hand is a flush.
         RankedHand hand = holdem.rankHand(holeCards, communityCards);
         assert hand.getRanking().equals(HandRanking.FLUSH) : "Wrong hand ranking: " + hand.getRanking();
-        assert !hand.getCards().contains(PlayingCard.ACE_OF_CLUBS) : "Hand should not contain Ace of Clubs.";
-        assert hand.getCards().contains(PlayingCard.KING_OF_SPADES) : "Hand should contain King of Spades.";
+        assert !hand.contains(PlayingCard.ACE_OF_CLUBS) : "Hand should not contain Ace of Clubs.";
+        assert hand.contains(PlayingCard.KING_OF_SPADES) : "Hand should contain King of Spades.";
     }
 
 
@@ -76,7 +76,7 @@ public class TexasHoldemTest
         // Best hand is a straight (using the community cards).
         RankedHand hand = holdem.rankHand(holeCards, communityCards);
         assert hand.getRanking().equals(HandRanking.STRAIGHT) : "Wrong hand ranking: " + hand.getRanking();
-        assert !hand.getCards().contains(PlayingCard.ACE_OF_CLUBS) : "Hand should not contain Ace of Clubs.";
-        assert !hand.getCards().contains(PlayingCard.ACE_OF_DIAMONDS) : "Hand should not contain Ace of Diamonds.";
+        assert !hand.contains(PlayingCard.ACE_OF_CLUBS) : "Hand should not contain Ace of Clubs.";
+        assert !hand.contains(PlayingCard.ACE_OF_DIAMONDS) : "Hand should not contain Ace of Diamonds.";
     }
 }

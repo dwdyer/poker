@@ -23,11 +23,11 @@ public class FiveCardHandEvaluatorTest
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.ROYAL_FLUSH : "Wrong hand ranking: " + hand.getRanking();
         // The ace is the most significant card, the ten the least.
-        assert hand.getCards().get(0) == PlayingCard.ACE_OF_SPADES : "Wrong order.";
-        assert hand.getCards().get(1) == PlayingCard.KING_OF_SPADES : "Wrong order.";
-        assert hand.getCards().get(2) == PlayingCard.QUEEN_OF_SPADES : "Wrong order.";
-        assert hand.getCards().get(3) == PlayingCard.JACK_OF_SPADES : "Wrong order.";
-        assert hand.getCards().get(4) == PlayingCard.TEN_OF_SPADES : "Wrong order.";
+        assert hand.getCard(0) == PlayingCard.ACE_OF_SPADES : "Wrong order.";
+        assert hand.getCard(1) == PlayingCard.KING_OF_SPADES : "Wrong order.";
+        assert hand.getCard(2) == PlayingCard.QUEEN_OF_SPADES : "Wrong order.";
+        assert hand.getCard(3) == PlayingCard.JACK_OF_SPADES : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.TEN_OF_SPADES : "Wrong order.";
     }
 
 
@@ -42,11 +42,11 @@ public class FiveCardHandEvaluatorTest
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.STRAIGHT_FLUSH : "Wrong hand ranking: " + hand.getRanking();
         // The eight is the most significant card, the four the least.
-        assert hand.getCards().get(0) == PlayingCard.EIGHT_OF_HEARTS : "Wrong order.";
-        assert hand.getCards().get(1) == PlayingCard.SEVEN_OF_HEARTS : "Wrong order.";
-        assert hand.getCards().get(2) == PlayingCard.SIX_OF_HEARTS : "Wrong order.";
-        assert hand.getCards().get(3) == PlayingCard.FIVE_OF_HEARTS : "Wrong order.";
-        assert hand.getCards().get(4) == PlayingCard.FOUR_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(0) == PlayingCard.EIGHT_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(1) == PlayingCard.SEVEN_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(2) == PlayingCard.SIX_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(3) == PlayingCard.FIVE_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.FOUR_OF_HEARTS : "Wrong order.";
     }
 
 
@@ -64,11 +64,11 @@ public class FiveCardHandEvaluatorTest
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.STRAIGHT_FLUSH : "Wrong hand ranking: " + hand.getRanking();
         // The five is the most significant card, the ace the least.
-        assert hand.getCards().get(0) == PlayingCard.FIVE_OF_DIAMONDS : "Wrong order.";
-        assert hand.getCards().get(1) == PlayingCard.FOUR_OF_DIAMONDS : "Wrong order.";
-        assert hand.getCards().get(2) == PlayingCard.THREE_OF_DIAMONDS : "Wrong order.";
-        assert hand.getCards().get(3) == PlayingCard.TWO_OF_DIAMONDS : "Wrong order.";
-        assert hand.getCards().get(4) == PlayingCard.ACE_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(0) == PlayingCard.FIVE_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(1) == PlayingCard.FOUR_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(2) == PlayingCard.THREE_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(3) == PlayingCard.TWO_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.ACE_OF_DIAMONDS : "Wrong order.";
     }
 
 
@@ -83,7 +83,7 @@ public class FiveCardHandEvaluatorTest
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.FOUR_OF_A_KIND : "Wrong hand ranking: " + hand.getRanking();
         // The kicker should be the least significant card.
-        assert hand.getCards().get(4) == PlayingCard.TWO_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.TWO_OF_DIAMONDS : "Wrong order.";
     }
 
 
@@ -102,7 +102,7 @@ public class FiveCardHandEvaluatorTest
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.FOUR_OF_A_KIND : "Wrong hand ranking: " + hand.getRanking();
         // The kicker should be the least significant card.
-        assert hand.getCards().get(4) == PlayingCard.NINE_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.NINE_OF_DIAMONDS : "Wrong order.";
     }
 
 
@@ -117,11 +117,11 @@ public class FiveCardHandEvaluatorTest
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.FULL_HOUSE : "Wrong hand ranking: " + hand.getRanking();
         // Trips are more important than the pair.
-        assert hand.getCards().get(0).getValue() == FaceValue.JACK : "Wrong order.";
-        assert hand.getCards().get(1).getValue() == FaceValue.JACK : "Wrong order.";
-        assert hand.getCards().get(2).getValue() == FaceValue.JACK : "Wrong order.";
-        assert hand.getCards().get(3).getValue() == FaceValue.SEVEN : "Wrong order.";
-        assert hand.getCards().get(4).getValue() == FaceValue.SEVEN : "Wrong order.";
+        assert hand.getCard(0).getValue() == FaceValue.JACK : "Wrong order.";
+        assert hand.getCard(1).getValue() == FaceValue.JACK : "Wrong order.";
+        assert hand.getCard(2).getValue() == FaceValue.JACK : "Wrong order.";
+        assert hand.getCard(3).getValue() == FaceValue.SEVEN : "Wrong order.";
+        assert hand.getCard(4).getValue() == FaceValue.SEVEN : "Wrong order.";
     }
 
 
@@ -136,11 +136,11 @@ public class FiveCardHandEvaluatorTest
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.FULL_HOUSE : "Wrong hand ranking: " + hand.getRanking();
         // Trips are more important than the pair, even though they are lower.
-        assert hand.getCards().get(0).getValue() == FaceValue.TWO : "Wrong order.";
-        assert hand.getCards().get(1).getValue() == FaceValue.TWO : "Wrong order.";
-        assert hand.getCards().get(2).getValue() == FaceValue.TWO : "Wrong order.";
-        assert hand.getCards().get(3).getValue() == FaceValue.KING : "Wrong order.";
-        assert hand.getCards().get(4).getValue() == FaceValue.KING : "Wrong order.";
+        assert hand.getCard(0).getValue() == FaceValue.TWO : "Wrong order.";
+        assert hand.getCard(1).getValue() == FaceValue.TWO : "Wrong order.";
+        assert hand.getCard(2).getValue() == FaceValue.TWO : "Wrong order.";
+        assert hand.getCard(3).getValue() == FaceValue.KING : "Wrong order.";
+        assert hand.getCard(4).getValue() == FaceValue.KING : "Wrong order.";
     }
 
 
@@ -155,11 +155,11 @@ public class FiveCardHandEvaluatorTest
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.FLUSH : "Wrong hand ranking: " + hand.getRanking();
         // The queen is the most significant card, the four the least.
-        assert hand.getCards().get(0) == PlayingCard.QUEEN_OF_CLUBS : "Wrong order.";
-        assert hand.getCards().get(1) == PlayingCard.NINE_OF_CLUBS : "Wrong order.";
-        assert hand.getCards().get(2) == PlayingCard.EIGHT_OF_CLUBS : "Wrong order.";
-        assert hand.getCards().get(3) == PlayingCard.SIX_OF_CLUBS : "Wrong order.";
-        assert hand.getCards().get(4) == PlayingCard.FOUR_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(0) == PlayingCard.QUEEN_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(1) == PlayingCard.NINE_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(2) == PlayingCard.EIGHT_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(3) == PlayingCard.SIX_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.FOUR_OF_CLUBS : "Wrong order.";
     }
 
 
@@ -189,11 +189,11 @@ public class FiveCardHandEvaluatorTest
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.STRAIGHT : "Wrong hand ranking: " + hand.getRanking();
         // The ten is the most significant card, the six the least.
-        assert hand.getCards().get(0) == PlayingCard.TEN_OF_HEARTS : "Wrong order.";
-        assert hand.getCards().get(1) == PlayingCard.NINE_OF_HEARTS : "Wrong order.";
-        assert hand.getCards().get(2) == PlayingCard.EIGHT_OF_SPADES : "Wrong order.";
-        assert hand.getCards().get(3) == PlayingCard.SEVEN_OF_DIAMONDS : "Wrong order.";
-        assert hand.getCards().get(4) == PlayingCard.SIX_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(0) == PlayingCard.TEN_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(1) == PlayingCard.NINE_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(2) == PlayingCard.EIGHT_OF_SPADES : "Wrong order.";
+        assert hand.getCard(3) == PlayingCard.SEVEN_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.SIX_OF_CLUBS : "Wrong order.";
     }
 
 
@@ -241,11 +241,11 @@ public class FiveCardHandEvaluatorTest
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.STRAIGHT : "Wrong hand ranking: " + hand.getRanking();
         // The five is the most significant card, the ace the least.
-        assert hand.getCards().get(0) == PlayingCard.FIVE_OF_SPADES : "Wrong order.";
-        assert hand.getCards().get(1) == PlayingCard.FOUR_OF_HEARTS : "Wrong order.";
-        assert hand.getCards().get(2) == PlayingCard.THREE_OF_HEARTS : "Wrong order.";
-        assert hand.getCards().get(3) == PlayingCard.TWO_OF_CLUBS : "Wrong order.";
-        assert hand.getCards().get(4) == PlayingCard.ACE_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(0) == PlayingCard.FIVE_OF_SPADES : "Wrong order.";
+        assert hand.getCard(1) == PlayingCard.FOUR_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(2) == PlayingCard.THREE_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(3) == PlayingCard.TWO_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.ACE_OF_DIAMONDS : "Wrong order.";
     }
 
 
@@ -289,7 +289,7 @@ public class FiveCardHandEvaluatorTest
                                          PlayingCard.SIX_OF_CLUBS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.TWO_PAIR : "Wrong hand ranking: " + hand.getRanking();
-        assert hand.getCards().get(4) == PlayingCard.EIGHT_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.EIGHT_OF_HEARTS : "Wrong order.";
     }
 
 
@@ -316,7 +316,7 @@ public class FiveCardHandEvaluatorTest
                                          PlayingCard.THREE_OF_DIAMONDS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.HIGH_CARD : "Wrong hand ranking: " + hand.getRanking();
-        assert hand.getCards().get(0) == PlayingCard.KING_OF_DIAMONDS : "Wrong high card.";
+        assert hand.getCard(0) == PlayingCard.KING_OF_DIAMONDS : "Wrong high card.";
     }
 
 
@@ -334,7 +334,7 @@ public class FiveCardHandEvaluatorTest
                                          PlayingCard.THREE_OF_DIAMONDS);
         RankedHand hand = handEvaluator.evaluate(cards);
         assert hand.getRanking() == HandRanking.HIGH_CARD : "Wrong hand ranking: " + hand.getRanking();
-        assert hand.getCards().get(0) == PlayingCard.ACE_OF_CLUBS : "Wrong high card.";
+        assert hand.getCard(0) == PlayingCard.ACE_OF_CLUBS : "Wrong high card.";
     }
 
 

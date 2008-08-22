@@ -1,7 +1,7 @@
 package org.uncommons.poker.game.cards;
 
 import java.util.List;
-import java.util.RandomAccess;
+import java.util.Arrays;
 
 /**
  * @author Daniel Dyer
@@ -10,7 +10,7 @@ public final class RankedHand implements Comparable<RankedHand>
 {
     public static final int HAND_SIZE = 5;
 
-    private final List<PlayingCard> cards;
+    private final PlayingCard[] cards = new PlayingCard[HAND_SIZE];
     private final HandRanking ranking;
 
     /**
@@ -20,11 +20,7 @@ public final class RankedHand implements Comparable<RankedHand>
      */
     public RankedHand(List<PlayingCard> cards, HandRanking ranking)
     {
-        if (cards.size() > HAND_SIZE) // Fewer cards is OK (we maybe ranking incomplete hands).
-        {
-            throw new IllegalArgumentException("Too many cards.");
-        }
-        this.cards = cards;
+        cards.toArray(this.cards);
         this.ranking = ranking;
     }
 
@@ -35,9 +31,9 @@ public final class RankedHand implements Comparable<RankedHand>
     }
 
 
-    public List<PlayingCard> getCards()
+    public PlayingCard getCard(int index)
     {
-        return cards;
+        return cards[index];
     }
 
 
@@ -49,11 +45,10 @@ public final class RankedHand implements Comparable<RankedHand>
         // a pair of kings.
         if (compare == 0)
         {
-            List<PlayingCard> otherCards = otherHand.getCards();
-            assert otherCards instanceof RandomAccess : "Performance problem.";
-            for (int i = 0; i < cards.size(); i++)
+            PlayingCard[] otherCards = otherHand.cards;
+            for (int i = 0; i < cards.length; i++)
             {
-                compare = cards.get(i).ordinal() - otherCards.get(i).ordinal();
+                compare = cards[i].ordinal() - otherCards[i].ordinal();
                 if (compare != 0)
                 {
                     break;
@@ -61,5 +56,14 @@ public final class RankedHand implements Comparable<RankedHand>
             }
         }
         return compare;
+    }
+
+
+    /**
+     * Test whether this hand contains a given card.  Used mostly for validation by unit tests.
+     */
+    public boolean contains(PlayingCard card)
+    {
+        return Arrays.binarySearch(cards, card) >= 0;
     }
 }

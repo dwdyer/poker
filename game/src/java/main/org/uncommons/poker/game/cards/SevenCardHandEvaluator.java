@@ -112,14 +112,14 @@ public class SevenCardHandEvaluator implements HandEvaluator
     private RankedHand rankStraightOrFlush(List<PlayingCard> cards)
     {
         List<PlayingCard> flushCards = filterFlushCards(cards);
+        List<PlayingCard> straightCards = filterStraightCards(flushCards == null ? cards : flushCards);
         if (flushCards != null)
         {
             HandRanking ranking = HandRanking.FLUSH;
             // If the hand is also a straight, then this is more than just a flush...
-            RankedHand straight = checkForStraight(flushCards);
-            if (straight != null)
+            if (straightCards != null)
             {
-                flushCards = straight.getCards();
+                flushCards = straightCards;
                 ranking = flushCards.get(0).getValue() == FaceValue.ACE ? HandRanking.ROYAL_FLUSH
                                                                         : HandRanking.STRAIGHT_FLUSH;
             }
@@ -131,10 +131,11 @@ public class SevenCardHandEvaluator implements HandEvaluator
             
             return new RankedHand(flushCards, ranking);
         }
-        else
+        else if (straightCards != null)
         {
-            return checkForStraight(cards);
+            return new RankedHand(straightCards, HandRanking.STRAIGHT);
         }
+        return null;
     }
 
 
@@ -175,7 +176,7 @@ public class SevenCardHandEvaluator implements HandEvaluator
     }
 
 
-    private RankedHand checkForStraight(List<PlayingCard> cards)
+    private List<PlayingCard> filterStraightCards(List<PlayingCard> cards)
     {
         // Re-jig the list so that we can detect 5, 4, 3, 2, A as a straight too. 
         PlayingCard highestCard = cards.get(0);
@@ -194,7 +195,7 @@ public class SevenCardHandEvaluator implements HandEvaluator
                 straightCards.add(cards.get(i));
                 if (straightCards.size() == RankedHand.HAND_SIZE)
                 {
-                    return new RankedHand(straightCards, HandRanking.STRAIGHT);
+                    return straightCards;
                 }
             }
             // If there are two consecutive cards of the same rank, skip over the second one.
