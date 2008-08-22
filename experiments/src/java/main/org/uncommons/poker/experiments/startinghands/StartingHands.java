@@ -23,13 +23,16 @@ public class StartingHands
 {
     public static void main(String[] args)
     {
-        int iterations = Integer.parseInt(args[0]);
+        int seats = Integer.parseInt(args[0]);
+        int iterations = Integer.parseInt(args[1]);
+        
+        TexasHoldem rules = new TexasHoldem();
         
         long start = System.currentTimeMillis();
         StartingHands startingHands = new StartingHands();
-        Map<String, StartingHandInfo> info = startingHands.simulate(2,
+        Map<String, StartingHandInfo> info = startingHands.simulate(seats,
                                                                     iterations,
-                                                                    new TexasHoldem(),
+                                                                    rules,
                                                                     new MersenneTwisterRNG());
         long elapsed = System.currentTimeMillis() - start;
         System.out.println("Completed in " + elapsed/1000 + " seconds.");

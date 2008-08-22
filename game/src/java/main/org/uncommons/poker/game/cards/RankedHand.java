@@ -1,7 +1,6 @@
 package org.uncommons.poker.game.cards;
 
 import java.util.List;
-import java.util.Collections;
 import java.util.RandomAccess;
 
 /**
@@ -25,7 +24,7 @@ public final class RankedHand implements Comparable<RankedHand>
         {
             throw new IllegalArgumentException("Too many cards.");
         }
-        this.cards = Collections.unmodifiableList(cards);
+        this.cards = cards;
         this.ranking = ranking;
     }
 

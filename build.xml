@@ -27,13 +27,13 @@
 
   <target name="game" depends="utilities">
     <module:compile module="game" />
-    <module:jar module="game" classpath="utilities.jar uncommons-maths-1.1pre.jar" />
+    <module:jar module="game" classpath="utilities.jar uncommons-maths-1.1.jar" />
   </target>
 
 
   <target name="experiments" depends="game">
     <module:compile module="experiments" />
-    <module:jar module="experiments" classpath="game.jar uncommons-maths-1.1pre.jar"/>
+    <module:jar module="experiments" classpath="game.jar uncommons-maths-1.1.jar"/>
   </target>
 
 

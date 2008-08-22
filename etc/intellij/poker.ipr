@@ -474,16 +474,16 @@
     <option name="shortCycleTableSpecificationString" value="" />
   </component>
   <component name="libraryTable">
-    <library name="uncommons-maths-1.1pre">
+    <library name="testng-5.6-jdk15">
       <CLASSES>
-        <root url="jar:///Users/dan/Projects/poker/lib/runtime/uncommons-maths-1.1pre.jar!/" />
+        <root url="jar:///Users/dan/Projects/poker/lib/compiletime/testng-5.6-jdk15.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="testng-5.6-jdk15">
+    <library name="uncommons-maths-1.1">
       <CLASSES>
-        <root url="jar:///Users/dan/Projects/poker/lib/compiletime/testng-5.6-jdk15.jar!/" />
+        <root url="jar:///Users/dan/Projects/poker/lib/runtime/uncommons-maths-1.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
