@@ -1,7 +1,6 @@
 package org.uncommons.poker.game.cards;
 
 import java.util.List;
-import java.util.Arrays;
 
 /**
  * @author Daniel Dyer
@@ -64,6 +63,13 @@ public final class RankedHand implements Comparable<RankedHand>
      */
     public boolean contains(PlayingCard card)
     {
-        return Arrays.binarySearch(cards, card) >= 0;
+        for (PlayingCard c : cards)
+        {
+            if (c == card)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

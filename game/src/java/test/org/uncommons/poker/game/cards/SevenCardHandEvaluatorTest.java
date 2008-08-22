@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Unit test for {@link FiveCardHandEvaluator}.
+ * Unit test for {@link FiveCardHandEvaluator}.  This test class consists of a whole load
+ * of corner cases to make sure that the seven cards are correctly combined into the highest
+ * five card hand.
  * @author Daniel Dyer
  */
 public class SevenCardHandEvaluatorTest
@@ -63,6 +65,58 @@ public class SevenCardHandEvaluatorTest
         assert hand.getCard(2) == PlayingCard.SEVEN_OF_CLUBS : "Wrong order.";
         assert hand.getCard(3) == PlayingCard.SIX_OF_CLUBS : "Wrong order.";
         assert hand.getCard(4) == PlayingCard.FIVE_OF_CLUBS : "Wrong order.";
+    }
+
+
+    /**
+     * If the seven cards contain quads, a pair and a kicker that is higher than the
+     * pair, then that kicker should be added to the quads to make the 5-card hand,
+     * rather than one of the pair. 
+     */
+    @Test
+    public void testFourOfAKindWithLowPairAndHighKicker()
+    {
+        List<PlayingCard> cards = asList(PlayingCard.KING_OF_DIAMONDS,
+                                         PlayingCard.EIGHT_OF_SPADES,
+                                         PlayingCard.EIGHT_OF_HEARTS,
+                                         PlayingCard.EIGHT_OF_DIAMONDS,
+                                         PlayingCard.EIGHT_OF_CLUBS,
+                                         PlayingCard.SIX_OF_DIAMONDS,
+                                         PlayingCard.SIX_OF_CLUBS);
+
+        RankedHand hand = handEvaluator.evaluate(cards);
+
+        assert hand.getRanking() == HandRanking.FOUR_OF_A_KIND : "Wrong hand ranking: " + hand.getRanking();
+
+        assert hand.getCard(4) == PlayingCard.KING_OF_DIAMONDS : "Wrong kicker: " + hand.getCard(4);
+    }
+
+
+
+    /**
+     * If the seven cards contain trips and two other pairs, make sure that the right
+     * pair is used to construct the full house hand.
+     */
+    @Test
+    public void testFullHouseWithExtraPair()
+    {
+        List<PlayingCard> cards = asList(PlayingCard.JACK_OF_SPADES,
+                                         PlayingCard.JACK_OF_DIAMONDS,
+                                         PlayingCard.EIGHT_OF_HEARTS,
+                                         PlayingCard.EIGHT_OF_DIAMONDS,
+                                         PlayingCard.EIGHT_OF_CLUBS,
+                                         PlayingCard.SIX_OF_DIAMONDS,
+                                         PlayingCard.SIX_OF_CLUBS);
+
+        RankedHand hand = handEvaluator.evaluate(cards);
+
+        assert hand.getRanking() == HandRanking.FULL_HOUSE : "Wrong hand ranking: " + hand.getRanking();
+
+        assert hand.getCard(0) == PlayingCard.EIGHT_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(1) == PlayingCard.EIGHT_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(2) == PlayingCard.EIGHT_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(3) == PlayingCard.JACK_OF_SPADES : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.JACK_OF_DIAMONDS : "Wrong order.";
     }
 
 
