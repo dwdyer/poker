@@ -24,6 +24,22 @@ public final class RankedHand implements Comparable<RankedHand>
     }
 
 
+    public RankedHand(PlayingCard card1,
+                      PlayingCard card2,
+                      PlayingCard card3,
+                      PlayingCard card4,
+                      PlayingCard card5,
+                      HandRanking ranking)
+    {
+        cards[0] = card1;
+        cards[1] = card2;
+        cards[2] = card3;
+        cards[3] = card4;
+        cards[4] = card5;
+        this.ranking = ranking;
+    }
+
+
     public HandRanking getRanking()
     {
         return ranking;

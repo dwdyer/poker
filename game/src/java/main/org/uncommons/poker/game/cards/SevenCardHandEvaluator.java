@@ -1,11 +1,9 @@
 package org.uncommons.poker.game.cards;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import org.uncommons.poker.game.Suit;
+import org.uncommons.util.ListUtils;
 
 /**
  * A {@link HandEvaluator} implementation that works on 7-card hands.  It assumes that any
@@ -17,124 +15,97 @@ import org.uncommons.poker.game.Suit;
  * <i>For Omaha, first generate all valid 5-card combinations and then use
  * {@link FiveCardHandEvaluator}.  The same approach could also be used for Hold'em and
  * Stud but a 7-card evaluator is faster.</i>
- * 
+ *
  * @author Daniel Dyer
  */
 public class SevenCardHandEvaluator implements HandEvaluator
 {
-    private static final Comparator<List<PlayingCard>> LIST_SIZE_COMPARATOR = new Comparator<List<PlayingCard>>()
-    {
-        public int compare(List<PlayingCard> cards1, List<PlayingCard> cards2)
-        {
-            return cards2.size() - cards1.size(); // Reverse order.
-        }
-    };
-
-
     /**
      * {@inheritDoc}
      */
     public RankedHand evaluate(List<PlayingCard> cards)
     {
-        // First check for straight, flush or straight flush.
-        RankedHand rankedHand = rankStraightOrFlush(cards);
-
-        List<List<PlayingCard>> groupedByValue = groupByValue(cards);
-
-        List<PlayingCard> hand = new ArrayList<PlayingCard>(5);
-        Iterator<List<PlayingCard>> groupIterator = groupedByValue.iterator();
-        while (hand.size() < RankedHand.HAND_SIZE)
+        RankedHand straightOrFlushHand = rankStraightOrFlush(cards);
+        RankedHand groupedHand = rankGroupedHand(cards);
+        if (straightOrFlushHand != null                    
+            && straightOrFlushHand.compareTo(groupedHand) > 0)
         {
-            // If we have four cards in the hand already (FOUR_OF_A_KIND or TWO_PAIR),
-            // we don't want to add the next group, we want to add the highest remaining
-            // card as a kicker.
-            if (hand.size() == RankedHand.HAND_SIZE - 1)
+            return straightOrFlushHand;
+        }
+        return groupedHand;
+    }
+
+
+    /**
+     * Check for hand types that are constructed from groups (pairs, trips, quads)
+     * of same rank cards.
+     * @param cards Seven cards used to construct a 5-card hand.
+     * @return The highest ranking (ignoring straights and flushes) for any 5-card
+     * hand constructed from the seven cards.
+     */
+    private RankedHand rankGroupedHand(List<PlayingCard> cards)
+    {
+        // Counts how many pairs occur within a 7-card hand.  This is with replacement,
+        // so one card can appear in multiple pairs (these are pairs in the Cribbage sense
+        // rather than the poker sense).  This number of pairs maps to a particular poker
+        // hand ranking.
+        int pairs = 0;
+        int runLength = 1;
+        int biggestGroup = 1;
+        int positioned = 0;
+        for (int i = 0; i < cards.size() - 1; i++)
+        {
+            if (cards.get(i).getValue() == cards.get(i + 1).getValue())
             {
-                hand.add(findHighestCard(groupIterator));
+                ++runLength;
+                pairs += runLength - 1;
             }
             else
             {
-                for (PlayingCard card : groupIterator.next())
+                if (runLength > biggestGroup)
                 {
-                    hand.add(card);
-                    if (hand.size() == RankedHand.HAND_SIZE)
-                    {
-                        break;
-                    }
+                    // Make sure the biggest grouping is at the head of the list.
+                    int start = i - (runLength - 1);
+                    ListUtils.shiftLeft(cards, start, runLength, start);
+                    positioned += runLength;
+
+                    biggestGroup = runLength;
                 }
+                else if (runLength > 1 && positioned < RankedHand.HAND_SIZE - 1)
+                {
+                    // And that the second biggest grouping follows it.
+                    int start = i - (runLength - 1);
+                    ListUtils.shiftLeft(cards, start, runLength, start - positioned);
+                    positioned += runLength;
+                }
+                runLength = 1;
             }
         }
-
-        HandRanking handRanking = rankGroups(groupedByValue);
-        if (rankedHand == null || handRanking.compareTo(rankedHand.getRanking()) > 0)
-        {
-            rankedHand = new RankedHand(hand, handRanking);
-        }
-
-        return rankedHand;
+        // Map the number of pairs to a hand ranking.
+        HandRanking handRanking = mapPairsToRanking(pairs, biggestGroup);
+        return new RankedHand(cards.get(0),
+                              cards.get(1),
+                              cards.get(2),
+                              cards.get(3),
+                              cards.get(4),
+                              handRanking);
     }
 
-
-    /**
-     * Helper method to find the highest ranked individual card in one or more groups
-     * of cards.
-     * @param groupIterator Iterator for cards grouped by rank.
-     * @return The highest ranked card found.
-     */
-    private PlayingCard findHighestCard(Iterator<List<PlayingCard>> groupIterator)
+    
+    private HandRanking mapPairsToRanking(int pairs, int biggestGroup)
     {
-        PlayingCard kicker = null;
-        while (groupIterator.hasNext())
+        switch (pairs)
         {
-            // Don't need to iterate over all cards in the group since they are the
-            // same rank.  Just take the first one.
-            PlayingCard card = groupIterator.next().get(0);
-            if (kicker == null || card.compareTo(kicker) > 0)
-            {
-                kicker = card;
-            }
-        }
-        return kicker;
-    }
-
-
-    /**
-     * Group the cards by rank.  If there are no pairs, trips or quads, there will be 7 groups
-     * each with one member.
-     */
-    private List<List<PlayingCard>> groupByValue(List<PlayingCard> cards)
-    {
-        List<List<PlayingCard>> groupedByValue = new ArrayList<List<PlayingCard>>(7);
-
-        int start = 0;
-        int end = 1;
-        for (int i = 1; i < cards.size(); i++)
-        {
-            if (cards.get(i - 1).getValue() != cards.get(i).getValue())
-            {
-                groupedByValue.add(cards.subList(start, end));
-                start = i;
-                end = i;
-            }
-            ++end;
-        }
-        groupedByValue.add(cards.subList(start, end));
-        Collections.sort(groupedByValue, LIST_SIZE_COMPARATOR);
-        return groupedByValue;
-    }
-
-
-    private HandRanking rankGroups(List<List<PlayingCard>> groupedByValue)
-    {
-        Iterator<List<PlayingCard>> iterator = groupedByValue.iterator();
-        switch (iterator.next().size())
-        {
-            case 4: return HandRanking.FOUR_OF_A_KIND;
-            case 3: return iterator.next().size() >= 2 ? HandRanking.FULL_HOUSE
-                                                       : HandRanking.THREE_OF_A_KIND;
-            case 2: return iterator.next().size() == 2 ? HandRanking.TWO_PAIR
-                                                       : HandRanking.PAIR;
-            default: return HandRanking.HIGH_CARD;
+            case 0 : return HandRanking.HIGH_CARD;
+            case 1 : return HandRanking.PAIR;
+            case 2 : return HandRanking.TWO_PAIR;
+            case 3 : return biggestGroup == 3 ? HandRanking.THREE_OF_A_KIND : HandRanking.TWO_PAIR;
+            case 4 :
+            case 5 : return HandRanking.FULL_HOUSE;
+            case 6 :
+            case 7 :
+            case 9 : return HandRanking.FOUR_OF_A_KIND;
+            default : throw new IllegalArgumentException("Invalid pair count: " + pairs);
         }
     }
 
@@ -162,7 +133,7 @@ public class SevenCardHandEvaluator implements HandEvaluator
             {
                 flushCards.remove(flushCards.size() - 1);
             }
-            
+
             return new RankedHand(flushCards, ranking);
         }
         else if (straightCards != null)
@@ -212,7 +183,7 @@ public class SevenCardHandEvaluator implements HandEvaluator
 
     private List<PlayingCard> filterStraightCards(List<PlayingCard> cards)
     {
-        // Re-jig the list so that we can detect 5, 4, 3, 2, A as a straight too. 
+        // Re-jig the list so that we can detect 5, 4, 3, 2, A as a straight too.
         PlayingCard highestCard = cards.get(0);
         if (highestCard.getValue() == FaceValue.ACE && cards.get(cards.size() - 1).getValue() == FaceValue.TWO)
         {

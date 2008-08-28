@@ -31,7 +31,7 @@ public class FiveCardHandEvaluator implements HandEvaluator
     }
 
 
-    protected HandRanking rankHand(List<PlayingCard> cards)
+    private HandRanking rankHand(List<PlayingCard> cards)
     {
         int pairs = countPairs(cards);
         switch (pairs)
@@ -80,7 +80,7 @@ public class FiveCardHandEvaluator implements HandEvaluator
      * card (if these are equivalent then the second most significant cards can
      * be compared and so on).
      */
-    protected void orderCards(List<PlayingCard> cards, HandRanking ranking)
+    private void orderCards(List<PlayingCard> cards, HandRanking ranking)
     {
         // Assumes that the cards are already sorted by rank, so for flushes, high
         // cards and most straights, there is nothing to do.
