@@ -50,18 +50,7 @@ public class SevenCardHandEvaluator implements HandEvaluator
             // card as a kicker.
             if (hand.size() == RankedHand.HAND_SIZE - 1)
             {
-                PlayingCard kicker = null;
-                while (groupIterator.hasNext())
-                {
-                    for (PlayingCard card : groupIterator.next())
-                    {
-                        if (kicker == null || card.compareTo(kicker) > 0)
-                        {
-                            kicker = card;
-                        }
-                    }
-                }
-                hand.add(kicker);
+                hand.add(findHighestCard(groupIterator));
             }
             else
             {
@@ -83,6 +72,29 @@ public class SevenCardHandEvaluator implements HandEvaluator
         }
 
         return rankedHand;
+    }
+
+
+    /**
+     * Helper method to find the highest ranked individual card in one or more groups
+     * of cards.
+     * @param groupIterator Iterator for cards grouped by rank.
+     * @return The highest ranked card found.
+     */
+    private PlayingCard findHighestCard(Iterator<List<PlayingCard>> groupIterator)
+    {
+        PlayingCard kicker = null;
+        while (groupIterator.hasNext())
+        {
+            // Don't need to iterate over all cards in the group since they are the
+            // same rank.  Just take the first one.
+            PlayingCard card = groupIterator.next().get(0);
+            if (kicker == null || card.compareTo(kicker) > 0)
+            {
+                kicker = card;
+            }
+        }
+        return kicker;
     }
 
 
