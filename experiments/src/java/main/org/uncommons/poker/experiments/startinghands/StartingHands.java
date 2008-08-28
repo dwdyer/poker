@@ -6,8 +6,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ConcurrentMap;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.poker.game.cards.Deck;
 import org.uncommons.poker.game.cards.PlayingCard;
@@ -45,7 +47,7 @@ public class StartingHands
                                                   final PokerRules rules,
                                                   final Random rng)
     {
-        final Map<String, StartingHandInfo> startingHands = new ConcurrentHashMap<String, StartingHandInfo>();
+        final ConcurrentMap<String, StartingHandInfo> startingHands = new ConcurrentHashMap<String, StartingHandInfo>();
 
         // Divide the work across available processors.
         int threadCount = Runtime.getRuntime().availableProcessors();
@@ -101,7 +103,7 @@ public class StartingHands
     private void playHand(int seats,
                           PokerRules rules,
                           Random rng,
-                          Map<String, StartingHandInfo> startingHands)
+                          ConcurrentMap<String, StartingHandInfo> startingHands)
     {
         Deck deck = Deck.createFullDeck(rng);
 
@@ -121,15 +123,14 @@ public class StartingHands
         // Deal hole cards and determine the winning hand(s).
         for (int i = 0; i < seats; i++)
         {
-            List<PlayingCard> holeCards = new ArrayList<PlayingCard>(2);
-            holeCards.add(deck.dealCard());
-            holeCards.add(deck.dealCard());
+            PlayingCard holeCard1 = deck.dealCard();
+            PlayingCard holeCard2 = deck.dealCard();
 
-            String startingHand = getStartingHandClassification(holeCards);
+            String startingHand = getStartingHandClassification(holeCard1, holeCard2);
             StartingHandInfo info = getStartingHandInfo(startingHand, startingHands);
             info.incrementDealt();
 
-            RankedHand hand = rules.rankHand(holeCards, communityCards);
+            RankedHand hand = rules.rankHand(Arrays.asList(holeCard1, holeCard2), communityCards);
             if (bestHand == null || hand.compareTo(bestHand) > 0)
             {
                 bestHand = hand;
@@ -151,36 +152,37 @@ public class StartingHands
 
     
     private StartingHandInfo getStartingHandInfo(String startingHand,
-                                                 Map<String, StartingHandInfo> startingHands)
+                                                 ConcurrentMap<String, StartingHandInfo> startingHands)
     {
         StartingHandInfo info = startingHands.get(startingHand);
         if (info == null)
         {
             info = new StartingHandInfo(startingHand);
-            startingHands.put(startingHand, info);
+            startingHands.putIfAbsent(startingHand, info);
         }
         return info;
     }
 
 
-    private String getStartingHandClassification(List<PlayingCard> cards)
+    private String getStartingHandClassification(PlayingCard card1, PlayingCard card2)
     {
-        // Sort to ensure that card1 is the highest ranked.
-        if (cards.get(0).compareTo(cards.get(1)) < 0)
-        {
-            Collections.swap(cards, 0, 1);
-        }        
-
         StringBuilder buffer = new StringBuilder(3);
-        for (PlayingCard card : cards)
+        // Ensure that the first card is the highest ranked.
+        if (card2.compareTo(card1) > 0)
         {
-            buffer.append(card.getValue().getSymbol());
+            buffer.append(card2.getValue().getSymbol());
+            buffer.append(card1.getValue().getSymbol());
+        }
+        else
+        {
+            buffer.append(card1.getValue().getSymbol());
+            buffer.append(card2.getValue().getSymbol());
         }
 
         // If not a pair, is it suited or off-suit?
-        if (!cards.get(0).getValue().equals(cards.get(1).getValue()))
+        if (card1.getValue() != card2.getValue())
         {
-            buffer.append(cards.get(0).getSuit().equals(cards.get(1).getSuit()) ? 's' : 'o');
+            buffer.append(card1.getSuit() == card2.getSuit() ? 's' : 'o');
         }
         
         return buffer.toString();

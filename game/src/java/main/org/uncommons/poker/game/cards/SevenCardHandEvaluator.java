@@ -53,9 +53,11 @@ public class SevenCardHandEvaluator implements HandEvaluator
         int runLength = 1;
         int biggestGroup = 1;
         int positioned = 0;
-        for (int i = 0; i < cards.size() - 1; i++)
+        FaceValue previousValue = cards.get(0).getValue();
+        for (int i = 1; i < cards.size(); i++)
         {
-            if (cards.get(i).getValue() == cards.get(i + 1).getValue())
+            FaceValue value = cards.get(i).getValue();
+            if (previousValue == value)
             {
                 ++runLength;
                 pairs += runLength - 1;
@@ -80,6 +82,7 @@ public class SevenCardHandEvaluator implements HandEvaluator
                 }
                 runLength = 1;
             }
+            previousValue = value;
         }
         // Map the number of pairs to a hand ranking.
         HandRanking handRanking = mapPairsToRanking(pairs, biggestGroup);
@@ -151,31 +154,34 @@ public class SevenCardHandEvaluator implements HandEvaluator
      * because we haven't yet checked for a straight flush, we don't know whether we might still need
      * the lower ranked cards.
      */
+    @SuppressWarnings("unchecked")
     private List<PlayingCard> filterFlushCards(List<PlayingCard> cards)
     {
         int[] suitCounts = new int[4];
-
+        Suit flushSuit = null;
         for (PlayingCard card : cards)
         {
-            ++suitCounts[card.getSuit().ordinal()];
+            int count = ++suitCounts[card.getSuit().ordinal()];
+            if (count == RankedHand.HAND_SIZE)
+            {
+                flushSuit = card.getSuit();
+                break;
+            }
         }
 
         // If we have enough cards of one suit to make a flush, filter those cards into
         // a new list.
-        for (Suit suit : Suit.values())
+        if (flushSuit != null)
         {
-            if (suitCounts[suit.ordinal()] >= RankedHand.HAND_SIZE)
+            List<PlayingCard> flush = new ArrayList<PlayingCard>(RankedHand.HAND_SIZE);
+            for (PlayingCard card : cards)
             {
-                List<PlayingCard> flush = new ArrayList<PlayingCard>(RankedHand.HAND_SIZE);
-                for (PlayingCard card : cards)
+                if (card.getSuit() == flushSuit)
                 {
-                    if (card.getSuit() == suit)
-                    {
-                        flush.add(card);
-                    }
+                    flush.add(card);
                 }
-                return flush;
             }
+            return flush;
         }
         return null;
     }
@@ -192,24 +198,27 @@ public class SevenCardHandEvaluator implements HandEvaluator
         }
 
         List<PlayingCard> straightCards = new ArrayList<PlayingCard>(RankedHand.HAND_SIZE);
-        straightCards.add(cards.get(0));
+        straightCards.add(highestCard);
+        PlayingCard previousCard = highestCard;
         for (int i = 1; i < cards.size(); i++)
         {
-            if (assertConsecutiveRanks(cards.get(i), cards.get(i - 1)))
+            PlayingCard card = cards.get(i);
+            if (assertConsecutiveRanks(card, previousCard))
             {
-                straightCards.add(cards.get(i));
+                straightCards.add(card);
                 if (straightCards.size() == RankedHand.HAND_SIZE)
                 {
                     return straightCards;
                 }
             }
             // If there are two consecutive cards of the same rank, skip over the second one.
-            else if (cards.get(i).getValue() != cards.get(i - 1).getValue())
+            else if (card.getValue() != previousCard.getValue())
             {
                 // If we get to here, the card we're looking at is not part of a straight.
                 straightCards.clear();
-                straightCards.add(cards.get(i));
+                straightCards.add(card);
             }
+            previousCard = card;
         }
         return null;
     }
