@@ -201,6 +201,30 @@ public class SevenCardHandEvaluatorTest
 
 
     /**
+     * If the seven cards contain three pairs and a kicker that is higher than at
+     * least one of the pairs, then that kicker should be used to make the 5-card
+     * (TWO_PAIR) hand, rather than one of cards from the lowest pair.
+     */
+    @Test
+    public void testThreePairAndHighKicker()
+    {
+        List<PlayingCard> cards = asList(PlayingCard.KING_OF_DIAMONDS,
+                                         PlayingCard.JACK_OF_SPADES,
+                                         PlayingCard.JACK_OF_HEARTS,
+                                         PlayingCard.EIGHT_OF_DIAMONDS,
+                                         PlayingCard.EIGHT_OF_CLUBS,
+                                         PlayingCard.SIX_OF_DIAMONDS,
+                                         PlayingCard.SIX_OF_CLUBS);
+
+        RankedHand hand = handEvaluator.evaluate(cards);
+
+        assert hand.getRanking() == HandRanking.TWO_PAIR : "Wrong hand ranking: " + hand.getRanking();
+
+        assert hand.getCard(4) == PlayingCard.KING_OF_DIAMONDS : "Wrong kicker: " + hand.getCard(4);
+    }
+
+
+    /**
      * Like {@link java.util.Arrays#asList} except that the returned list is not fixed-size.
      */
     private static <T> List<T> asList(T... elements)

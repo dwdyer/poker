@@ -16,7 +16,7 @@ import org.uncommons.poker.game.Suit;
  *
  * <i>For Omaha, first generate all valid 5-card combinations and then use
  * {@link FiveCardHandEvaluator}.  The same approach could also be used for Hold'em and
- * Stud but this implementation is faster.</i>
+ * Stud but a 7-card evaluator is faster.</i>
  * 
  * @author Daniel Dyer
  */
@@ -42,14 +42,36 @@ public class SevenCardHandEvaluator implements HandEvaluator
         List<List<PlayingCard>> groupedByValue = groupByValue(cards);
 
         List<PlayingCard> hand = new ArrayList<PlayingCard>(5);
-        outerLoop: for (List<PlayingCard> group : groupedByValue)
+        Iterator<List<PlayingCard>> groupIterator = groupedByValue.iterator();
+        while (hand.size() < RankedHand.HAND_SIZE)
         {
-            for (PlayingCard card : group)
+            // If we have four cards in the hand already (FOUR_OF_A_KIND or TWO_PAIR),
+            // we don't want to add the next group, we want to add the highest remaining
+            // card as a kicker.
+            if (hand.size() == RankedHand.HAND_SIZE - 1)
             {
-                hand.add(card);
-                if (hand.size() == RankedHand.HAND_SIZE)
+                PlayingCard kicker = null;
+                while (groupIterator.hasNext())
                 {
-                    break outerLoop;
+                    for (PlayingCard card : groupIterator.next())
+                    {
+                        if (kicker == null || card.compareTo(kicker) > 0)
+                        {
+                            kicker = card;
+                        }
+                    }
+                }
+                hand.add(kicker);
+            }
+            else
+            {
+                for (PlayingCard card : groupIterator.next())
+                {
+                    hand.add(card);
+                    if (hand.size() == RankedHand.HAND_SIZE)
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -72,19 +94,19 @@ public class SevenCardHandEvaluator implements HandEvaluator
     {
         List<List<PlayingCard>> groupedByValue = new ArrayList<List<PlayingCard>>(7);
 
-        List<PlayingCard> group = new ArrayList<PlayingCard>(4);
-        group.add(cards.get(0));
+        int start = 0;
+        int end = 1;
         for (int i = 1; i < cards.size(); i++)
         {
-            PlayingCard card = cards.get(i);
-            if (cards.get(i - 1).getValue() != card.getValue())
+            if (cards.get(i - 1).getValue() != cards.get(i).getValue())
             {
-                groupedByValue.add(group);
-                group = new ArrayList<PlayingCard>(4);
+                groupedByValue.add(cards.subList(start, end));
+                start = i;
+                end = i;
             }
-            group.add(card);
+            ++end;
         }
-        groupedByValue.add(group);
+        groupedByValue.add(cards.subList(start, end));
         Collections.sort(groupedByValue, LIST_SIZE_COMPARATOR);
         return groupedByValue;
     }
