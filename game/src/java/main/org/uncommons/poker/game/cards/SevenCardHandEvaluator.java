@@ -67,7 +67,7 @@ public class SevenCardHandEvaluator implements HandEvaluator
                 if (runLength > biggestGroup)
                 {
                     // Make sure the biggest grouping is at the head of the list.
-                    int start = i - (runLength - 1);
+                    int start = i - runLength;
                     ListUtils.shiftLeft(cards, start, runLength, start);
                     positioned += runLength;
 
