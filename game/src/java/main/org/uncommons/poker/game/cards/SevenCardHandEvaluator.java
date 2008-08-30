@@ -64,26 +64,14 @@ public class SevenCardHandEvaluator implements HandEvaluator
             }
             else
             {
-                if (runLength > biggestGroup)
-                {
-                    // Make sure the biggest grouping is at the head of the list.
-                    int start = i - runLength;
-                    ListUtils.shiftLeft(cards, start, runLength, start);
-                    positioned += runLength;
-
-                    biggestGroup = runLength;
-                }
-                else if (runLength > 1 && positioned < RankedHand.HAND_SIZE - 1)
-                {
-                    // And that the second biggest grouping follows it.
-                    int start = i - (runLength - 1);
-                    ListUtils.shiftLeft(cards, start, runLength, start - positioned);
-                    positioned += runLength;
-                }
+                positioned = reorder(cards, runLength, biggestGroup, positioned, i);
+                biggestGroup = Math.max(biggestGroup, runLength);
                 runLength = 1;
             }
             previousValue = value;
         }
+        reorder(cards, runLength, biggestGroup, positioned, cards.size());
+        biggestGroup = Math.max(biggestGroup, runLength);
         // Map the number of pairs to a hand ranking.
         HandRanking handRanking = mapPairsToRanking(pairs, biggestGroup);
         return new RankedHand(cards.get(0),
@@ -94,6 +82,30 @@ public class SevenCardHandEvaluator implements HandEvaluator
                               handRanking);
     }
 
+
+    private int reorder(List<PlayingCard> cards,
+                        int runLength,
+                        int biggestGroup,
+                        int positioned,
+                        int i)
+    {
+        if (runLength > biggestGroup)
+        {
+            // Make sure the biggest grouping is at the head of the list.
+            int start = i - runLength;
+            ListUtils.shiftLeft(cards, start, runLength, start);
+            positioned += runLength;
+        }
+        else if (runLength > 1 && positioned < RankedHand.HAND_SIZE - 1)
+        {
+            // And that the second biggest grouping follows it.
+            int start = i - runLength;
+            ListUtils.shiftLeft(cards, start, runLength, start - positioned);
+            positioned += runLength;
+        }
+        return positioned;
+    }
+
     
     private HandRanking mapPairsToRanking(int pairs, int biggestGroup)
     {
@@ -102,10 +114,12 @@ public class SevenCardHandEvaluator implements HandEvaluator
             case 0 : return HandRanking.HIGH_CARD;
             case 1 : return HandRanking.PAIR;
             case 2 : return HandRanking.TWO_PAIR;
+            // A pair count of 3 could be from one set of trips or three separate pairs.
             case 3 : return biggestGroup == 3 ? HandRanking.THREE_OF_A_KIND : HandRanking.TWO_PAIR;
             case 4 :
             case 5 : return HandRanking.FULL_HOUSE;
-            case 6 :
+            // A pair count of 4 could be from one set of quads or two separate sets of trips.
+            case 6 : return biggestGroup == 4 ? HandRanking.FOUR_OF_A_KIND : HandRanking.FULL_HOUSE;
             case 7 :
             case 9 : return HandRanking.FOUR_OF_A_KIND;
             default : throw new IllegalArgumentException("Invalid pair count: " + pairs);

@@ -5,8 +5,20 @@ package org.uncommons.poker.game;
  */
 public enum Suit
 {
-    CLUBS,
-    DIAMONDS,
-    HEARTS,
-    SPADES
+    CLUBS('c'),
+    DIAMONDS('d'),
+    HEARTS('h'),
+    SPADES('s');
+
+    private final char symbol;
+
+    private Suit(char symbol)
+    {
+        this.symbol = symbol;
+    }
+
+    public char getSymbol()
+    {
+        return symbol;
+    }
 }

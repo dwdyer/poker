@@ -75,10 +75,13 @@ public enum PlayingCard
     private final Suit suit;
     private final FaceValue value;
 
+    private final String string;
+
     private PlayingCard(Suit suit, FaceValue value)
     {
         this.suit = suit;
         this.value = value;
+        this.string = "" + value.getSymbol() + suit.getSymbol();
     }
 
 
@@ -103,5 +106,12 @@ public enum PlayingCard
             values[values.length - i - 1] = temp;
         }
         return values;
+    }
+
+
+    @Override
+    public String toString()
+    {
+        return string;
     }
 }

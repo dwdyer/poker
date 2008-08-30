@@ -2,22 +2,35 @@ package org.uncommons.poker.game.rules;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.RandomAccess;
 import org.uncommons.poker.game.cards.HandEvaluator;
 import org.uncommons.poker.game.cards.PlayingCard;
 import org.uncommons.poker.game.cards.RankedHand;
-import org.uncommons.poker.game.cards.SevenCardHandEvaluator;
-import org.uncommons.poker.game.cards.SevenCardPrecomputedHandEvaluator;
 import org.uncommons.poker.game.cards.CardUtils;
+import org.uncommons.poker.game.cards.SevenCardHandEvaluator;
 
 /**
  * @author Daniel Dyer
  */
 public class TexasHoldem implements PokerRules
 {
-    private static final HandEvaluator HAND_EVALUATOR = new SevenCardPrecomputedHandEvaluator();
+    private final HandEvaluator handEvaluator;
 
 
+    public TexasHoldem()
+    {
+        this(new SevenCardHandEvaluator());
+    }
+
+
+    /**
+     * @param handEvaluator A 7-card hand evaluator.
+     */
+    public TexasHoldem(HandEvaluator handEvaluator)
+    {
+        this.handEvaluator = handEvaluator;
+    }
+
+    
     public RankedHand rankHand(List<PlayingCard> playerCards,
                                List<PlayingCard> communityCards)
     {
@@ -31,6 +44,6 @@ public class TexasHoldem implements PokerRules
         // The seven-card evaluator expects the cards to be sorted.
         CardUtils.sevenCardSort(allCards);
 
-        return HAND_EVALUATOR.evaluate(allCards);
+        return handEvaluator.evaluate(allCards);
     }
 }

@@ -92,6 +92,35 @@ public class SevenCardHandEvaluatorTest
     }
 
 
+    /**
+     * When the 7-card hand contains two sets of trips, it should be ranked as a full
+     * house consisting of the highest set of trips and two cards from the other trips.
+     * This is a regression test because this situation was wrongly being ranked as
+     * four-of-a-kind.
+     */
+    @Test
+    public void testFullHouseDoubleTrips()
+    {
+        List<PlayingCard> cards = asList(PlayingCard.NINE_OF_SPADES,
+                                         PlayingCard.NINE_OF_DIAMONDS,
+                                         PlayingCard.NINE_OF_CLUBS,
+                                         PlayingCard.EIGHT_OF_SPADES,
+                                         PlayingCard.SIX_OF_HEARTS,
+                                         PlayingCard.SIX_OF_DIAMONDS,
+                                         PlayingCard.SIX_OF_CLUBS);
+
+        RankedHand hand = handEvaluator.evaluate(cards);
+
+        assert hand.getRanking() == HandRanking.FULL_HOUSE : "Wrong hand ranking: " + hand.getRanking();
+
+        assert hand.getCard(0) == PlayingCard.NINE_OF_SPADES : "Wrong order.";
+        assert hand.getCard(1) == PlayingCard.NINE_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(2) == PlayingCard.NINE_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(3) == PlayingCard.SIX_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.SIX_OF_DIAMONDS : "Wrong order.";        
+    }
+
+
 
     /**
      * If the seven cards contain trips and two other pairs, make sure that the right
@@ -200,6 +229,28 @@ public class SevenCardHandEvaluatorTest
     }
 
 
+    @Test
+    public void testThreeOfAKind()
+    {
+        // The trips are made from the last three cards.  This is a regression test because
+        // the original implementation was not moving trips that occurred at the end of the list.
+        List<PlayingCard> cards = asList(PlayingCard.KING_OF_CLUBS,
+                                         PlayingCard.QUEEN_OF_DIAMONDS,
+                                         PlayingCard.JACK_OF_HEARTS,
+                                         PlayingCard.FIVE_OF_DIAMONDS,
+                                         PlayingCard.FOUR_OF_SPADES,
+                                         PlayingCard.FOUR_OF_HEARTS,
+                                         PlayingCard.FOUR_OF_CLUBS);
+        RankedHand hand = handEvaluator.evaluate(cards);
+        assert hand.getRanking() == HandRanking.THREE_OF_A_KIND : "Wrong hand ranking: " + hand.getRanking();
+        assert hand.getCard(0) == PlayingCard.FOUR_OF_SPADES : "Wrong order.";
+        assert hand.getCard(1) == PlayingCard.FOUR_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(2) == PlayingCard.FOUR_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(3) == PlayingCard.KING_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.QUEEN_OF_DIAMONDS : "Wrong order.";
+    }
+
+
     /**
      * If the seven cards contain three pairs and a kicker that is higher than at
      * least one of the pairs, then that kicker should be used to make the 5-card
@@ -221,6 +272,48 @@ public class SevenCardHandEvaluatorTest
         assert hand.getRanking() == HandRanking.TWO_PAIR : "Wrong hand ranking: " + hand.getRanking();
 
         assert hand.getCard(4) == PlayingCard.KING_OF_DIAMONDS : "Wrong kicker: " + hand.getCard(4);
+    }
+
+
+    @Test
+    public void testTwoPair()
+    {
+        // The second pair is made from the last two cards.  This is a regression test because
+        // the original implementation was not moving pairs that occurred at the end of the list.
+        List<PlayingCard> cards = asList(PlayingCard.JACK_OF_SPADES,
+                                         PlayingCard.TEN_OF_DIAMONDS,
+                                         PlayingCard.EIGHT_OF_HEARTS,
+                                         PlayingCard.SEVEN_OF_DIAMONDS,
+                                         PlayingCard.SEVEN_OF_CLUBS,
+                                         PlayingCard.THREE_OF_HEARTS,
+                                         PlayingCard.THREE_OF_DIAMONDS);
+        RankedHand hand = handEvaluator.evaluate(cards);
+        assert hand.getRanking() == HandRanking.TWO_PAIR : "Wrong hand ranking: " + hand.getRanking();
+        assert hand.getCard(0) == PlayingCard.SEVEN_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(1) == PlayingCard.SEVEN_OF_CLUBS : "Wrong order.";
+        assert hand.getCard(2) == PlayingCard.THREE_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(3) == PlayingCard.THREE_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.JACK_OF_SPADES : "Wrong order.";
+    }
+
+
+    @Test
+    public void testPair()
+    {
+        List<PlayingCard> cards = asList(PlayingCard.KING_OF_DIAMONDS,
+                                         PlayingCard.QUEEN_OF_HEARTS,
+                                         PlayingCard.SEVEN_OF_CLUBS,
+                                         PlayingCard.SIX_OF_CLUBS,
+                                         PlayingCard.THREE_OF_SPADES,
+                                         PlayingCard.THREE_OF_DIAMONDS,
+                                         PlayingCard.TWO_OF_DIAMONDS);
+        RankedHand hand = handEvaluator.evaluate(cards);
+        assert hand.getRanking() == HandRanking.PAIR : "Wrong hand ranking: " + hand.getRanking();
+        assert hand.getCard(0) == PlayingCard.THREE_OF_SPADES : "Wrong order.";
+        assert hand.getCard(1) == PlayingCard.THREE_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(2) == PlayingCard.KING_OF_DIAMONDS : "Wrong order.";
+        assert hand.getCard(3) == PlayingCard.QUEEN_OF_HEARTS : "Wrong order.";
+        assert hand.getCard(4) == PlayingCard.SEVEN_OF_CLUBS : "Wrong order.";
     }
 
 

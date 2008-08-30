@@ -1,7 +1,6 @@
 package org.uncommons.poker.game.cards;
 
 import java.util.List;
-import java.util.Arrays;
 
 /**
  * Immutable 5-card poker hand.  Cards are arranged in descending order of
@@ -98,5 +97,18 @@ public final class RankedHand implements Comparable<RankedHand>
     public PlayingCard[] getCards()
     {
         return cards.clone();
+    }
+
+
+    @Override
+    public String toString()
+    {
+        StringBuilder buffer = new StringBuilder();
+        for (PlayingCard card : cards)
+        {
+            buffer.append(card.toString());
+            buffer.append(' ');
+        }
+        return buffer.toString();
     }
 }
