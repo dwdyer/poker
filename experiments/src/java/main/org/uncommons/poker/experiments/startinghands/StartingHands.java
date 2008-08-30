@@ -38,7 +38,7 @@ public class StartingHands
                                                                     rules,
                                                                     new MersenneTwisterRNG());
         long elapsed = System.currentTimeMillis() - start;
-        System.out.println("Completed in " + elapsed/1000 + " seconds.");
+        System.out.println("Completed " + iterations + " " + seats + "-player hands in " + elapsed/1000 + " seconds.");
         tabulate(info);
     }
 

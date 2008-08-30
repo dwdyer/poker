@@ -58,7 +58,7 @@ public final class CardUtils
      */
     public static void fiveCardSort(PlayingCard[] cards)
     {
-        assert cards.length == 5 : "Sorting network only works with 7 cards.";
+        assert cards.length == 5 : "Sorting network only works with 5 cards.";
         compareAndSwap(cards, 0, 1);
         compareAndSwap(cards, 3, 4);
         compareAndSwap(cards, 2, 4);
