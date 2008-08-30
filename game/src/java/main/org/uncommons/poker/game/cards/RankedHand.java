@@ -1,8 +1,11 @@
 package org.uncommons.poker.game.cards;
 
 import java.util.List;
+import java.util.Arrays;
 
 /**
+ * Immutable 5-card poker hand.  Cards are arranged in descending order of
+ * importance with relation to the hand's ranking.
  * @author Daniel Dyer
  */
 public final class RankedHand implements Comparable<RankedHand>
@@ -76,6 +79,8 @@ public final class RankedHand implements Comparable<RankedHand>
 
     /**
      * Test whether this hand contains a given card.  Used mostly for validation by unit tests.
+     * @return True if the card is present in this hand, false otherwise.
+     * @param card The card to search for.
      */
     public boolean contains(PlayingCard card)
     {
@@ -87,5 +92,11 @@ public final class RankedHand implements Comparable<RankedHand>
             }
         }
         return false;
+    }
+
+
+    public PlayingCard[] getCards()
+    {
+        return cards.clone();
     }
 }

@@ -49,6 +49,7 @@ public class RankedHandTest
         RankedHand hand2 = new RankedHand(cards2, HandRanking.PAIR);
 
         assert hand1.compareTo(hand2) > 0 : "First hand should beat second hand.";
+        assert !hand1.equals(hand2) : "equals() should be consisent with compareTo()";
     }
 
 
@@ -71,9 +72,10 @@ public class RankedHandTest
                                                  PlayingCard.FOUR_OF_SPADES,
                                                  PlayingCard.FOUR_OF_CLUBS,
                                                  PlayingCard.SEVEN_OF_CLUBS);
-        RankedHand hand2 = new RankedHand(cards2, HandRanking.PAIR);
+        RankedHand hand2 = new RankedHand(cards2, HandRanking.TWO_PAIR);
 
 
         assert hand1.compareTo(hand2) < 0 : "Second hand should beat first hand.";
+        assert !hand1.equals(hand2) : "equals() should be consisent with compareTo()";
     }
 }

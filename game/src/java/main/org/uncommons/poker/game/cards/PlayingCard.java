@@ -91,4 +91,17 @@ public enum PlayingCard
     {
         return value;
     }
+
+
+    public static PlayingCard[] reverseValues()
+    {
+        PlayingCard[] values = values();
+        for (int i = 0; i < values.length / 2; i++)
+        {
+            PlayingCard temp = values[i];
+            values[i] = values[values.length - i - 1];
+            values[values.length - i - 1] = temp;
+        }
+        return values;
+    }
 }

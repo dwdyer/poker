@@ -1,34 +1,27 @@
 package org.uncommons.poker.game.cards;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Daniel Dyer
  */
-public class SevenCardPrecomputedHandEvaluator
+public class SevenCardPrecomputedHandEvaluator implements HandEvaluator
 {
-    private static final File DATA_FILE = new File("7cardlookup.dat");
+    private static final RankedHand[] FIVE_CARD_LOOKUP_TABLE;
+    private static final int[] SEVEN_CARD_MAPPINGS;
 
-    private static final byte[] LOOKUP_TABLE;
     static
     {
-        try
-        {
-            LookupTableGenerator generator = new LookupTableGenerator();
-            if (DATA_FILE.exists())
-            {
-                LOOKUP_TABLE = generator.loadTable(DATA_FILE);
-            }
-            else
-            {
-                LOOKUP_TABLE = generator.generateTable();
-                generator.saveTable(LOOKUP_TABLE, DATA_FILE);
-            }
-        }
-        catch (IOException e)
-        {
-            throw new ExceptionInInitializerError(e);
-        }            
+        LookupTableGenerator generator = new LookupTableGenerator();
+        FIVE_CARD_LOOKUP_TABLE = generator.generateFiveCardLookupTable();
+        SEVEN_CARD_MAPPINGS = generator.generateSevenCardMappings();
+    }
+
+
+    public RankedHand evaluate(List<PlayingCard> cards)
+    {
+        int sevenCardHash = CardUtils.sevenCardHash(cards);
+        int fiveCardIndex = SEVEN_CARD_MAPPINGS[sevenCardHash];
+        return FIVE_CARD_LOOKUP_TABLE[fiveCardIndex];
     }
 }
