@@ -1,20 +1,23 @@
 package org.uncommons.poker.experiments.startinghands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.poker.game.cards.Deck;
+import org.uncommons.poker.game.cards.LookupHandEvaluator;
 import org.uncommons.poker.game.cards.PlayingCard;
 import org.uncommons.poker.game.cards.RankedHand;
-import org.uncommons.poker.game.cards.LookupHandEvaluator;
 import org.uncommons.poker.game.rules.PokerRules;
 import org.uncommons.poker.game.rules.TexasHoldem;
 
@@ -54,10 +57,11 @@ public class StartingHands
         int threadCount = Runtime.getRuntime().availableProcessors();
         final int iterationsPerThread = iterations / threadCount;
         final CountDownLatch latch = new CountDownLatch(threadCount);
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
         for (int i = 0; i < threadCount; i++)
         {
-            new Thread(new Runnable()
+            executor.submit(new Runnable()
             {
                 public void run()
                 {
@@ -67,12 +71,12 @@ public class StartingHands
                     }
                     latch.countDown();
                 }
-            }).start();
-
+            });
         }
         try
         {
             latch.await();
+            executor.shutdown();
         }
         catch (InterruptedException ex)
         {
@@ -193,22 +197,22 @@ public class StartingHands
     private static class StartingHandInfo
     {
         private final String id;
-        private int dealtCount = 0;
-        private int wonCount = 0;
+        private final AtomicInteger dealtCount = new AtomicInteger(0);
+        private final AtomicInteger wonCount = new AtomicInteger(0);
 
         StartingHandInfo(String id)
         {
             this.id = id;
         }
 
-        public synchronized void incrementDealt()
+        public void incrementDealt()
         {
-            ++dealtCount;
+            dealtCount.incrementAndGet();
         }
 
-        public synchronized void incrementWon()
+        public void incrementWon()
         {
-            ++wonCount;
+            wonCount.incrementAndGet();
         }
 
         public String getId()
@@ -216,19 +220,19 @@ public class StartingHands
             return id;
         }
 
-        public synchronized int getDealtCount()
+        public int getDealtCount()
         {
-            return dealtCount;
+            return dealtCount.get();
         }
 
-        public synchronized int getWonCount()
+        public int getWonCount()
         {
-            return wonCount;
+            return wonCount.get();
         }
 
-        public synchronized double getWinRate()
+        public double getWinRate()
         {
-            return ((double) wonCount) / dealtCount;
+            return ((double) wonCount.get()) / dealtCount.get();
         }
     }
 }
