@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="4" relativePaths="false">
+<project relativePaths="false" version="4">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
     <buildFile url="file:///Users/dan/Projects/poker/build.xml">
@@ -7,6 +7,7 @@
       <antReference projectDefault="true" />
       <customJdkName value="" />
       <maximumHeapSize value="128" />
+      <maximumStackSize value="32" />
       <properties />
     </buildFile>
   </component>
@@ -40,12 +41,16 @@
       <entry name="?*.tld" />
     </wildcardResourcePatterns>
   </component>
+  <component name="CopyrightManager" default="">
+    <module2copyright />
+  </component>
   <component name="CppTools.Loader" reportImplicitCastToBool="false" version="1" />
-  <component name="DataSourceManagerImpl" />
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
   </component>
-  <component name="DependencyValidationManager" />
+  <component name="DependencyValidationManager">
+    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
+  </component>
   <component name="EclipseCompilerSettings">
     <option name="DEBUGGING_INFO" value="true" />
     <option name="GENERATE_NO_WARNINGS" value="true" />
@@ -60,6 +65,7 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
     <option name="MAXIMUM_HEAP_SIZE" value="128" />
   </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
   <component name="EntryPointsManager">
     <entry_points />
   </component>
@@ -68,7 +74,6 @@
     <option name="OPEN_IN_BROWSER" value="false" />
     <option name="OUTPUT_DIRECTORY" />
   </component>
-  <component name="GUI Designer component loader factory" />
   <component name="IdProvider" IDEtalkID="0D0AA9419EF81876CD8BD46BC2DFC45D" />
   <component name="InspectionProjectProfileManager">
     <option name="PROJECT_PROFILE" value="Project Default" />
@@ -78,31 +83,15 @@
       <profile version="1.0" is_locked="false">
         <option name="myName" value="Project Default" />
         <option name="myLocal" value="false" />
-        <used_levels>
-          <error>
-            <option name="myName" value="ERROR" />
-            <option name="myVal" value="400" />
-          </error>
-          <warning>
-            <option name="myName" value="WARNING" />
-            <option name="myVal" value="300" />
-          </warning>
-          <information>
-            <option name="myName" value="INFO" />
-            <option name="myVal" value="200" />
-          </information>
-          <server>
-            <option name="myName" value="SERVER PROBLEM" />
-            <option name="myVal" value="100" />
-          </server>
-        </used_levels>
         <inspection_tool class="InstanceofChain" level="WARNING" enabled="true" />
         <inspection_tool class="DeclareCollectionAsInterface" level="WARNING" enabled="true">
           <option name="ignoreLocalVariables" value="false" />
           <option name="ignorePrivateMethodsAndFields" value="false" />
         </inspection_tool>
         <inspection_tool class="InstanceofThis" level="WARNING" enabled="true" />
-        <inspection_tool class="OverlyStrongTypeCast" level="WARNING" enabled="true" />
+        <inspection_tool class="OverlyStrongTypeCast" level="WARNING" enabled="true">
+          <option name="ignoreInMatchingInstanceof" value="false" />
+        </inspection_tool>
         <inspection_tool class="ReplaceAssignmentWithOperatorAssignment" level="WARNING" enabled="true">
           <option name="ignoreLazyOperators" value="true" />
           <option name="ignoreObscureOperators" value="false" />
@@ -120,7 +109,9 @@
         <inspection_tool class="CloneableImplementsClone" level="WARNING" enabled="true">
           <option name="m_ignoreCloneableDueToInheritance" value="false" />
         </inspection_tool>
-        <inspection_tool class="ObsoleteCollection" level="WARNING" enabled="true" />
+        <inspection_tool class="ObsoleteCollection" level="WARNING" enabled="true">
+          <option name="ignoreLibraryArguments" value="false" />
+        </inspection_tool>
         <inspection_tool class="ConfusingOctalEscape" level="WARNING" enabled="true" />
         <inspection_tool class="MultipleTypedDeclaration" level="WARNING" enabled="true" />
         <inspection_tool class="ConditionalExpressionWithIdenticalBranches" level="WARNING" enabled="true" />
@@ -135,9 +126,11 @@
         </inspection_tool>
         <inspection_tool class="UseOfAnotherObjectsPrivateField" level="WARNING" enabled="true" />
         <inspection_tool class="PackageVisibleField" level="WARNING" enabled="true" />
-        <inspection_tool class="PublicField" level="WARNING" enabled="true" />
+        <inspection_tool class="PublicField" level="WARNING" enabled="true">
+          <option name="ignoreEnums" value="false" />
+        </inspection_tool>
         <inspection_tool class="BadExceptionCaught" level="WARNING" enabled="true">
-          <option name="exceptionCheckString" value="java.lang.NullPointerException,java.lang.IllegalMonitorStateException,java.lang.ArrayIndexOutOfBoundsException" />
+          <option name="exceptionsString" value="java.lang.NullPointerException,java.lang.IllegalMonitorStateException,java.lang.ArrayIndexOutOfBoundsException" />
         </inspection_tool>
         <inspection_tool class="ThrowCaughtLocally" level="WARNING" enabled="true">
           <option name="ignoreRethrownExceptions" value="false" />
@@ -180,7 +173,9 @@
         <inspection_tool class="FloatingPointEquality" level="WARNING" enabled="true" />
         <inspection_tool class="LongLiteralsEndingWithLowercaseL" level="WARNING" enabled="true" />
         <inspection_tool class="CollectionsMustHaveInitialCapacity" level="WARNING" enabled="true" />
-        <inspection_tool class="SizeReplaceableByIsEmpty" level="WARNING" enabled="true" />
+        <inspection_tool class="SizeReplaceableByIsEmpty" level="WARNING" enabled="true">
+          <option name="ignoreNegations" value="false" />
+        </inspection_tool>
         <inspection_tool class="RandomDoubleForRandomInteger" level="WARNING" enabled="true" />
         <inspection_tool class="AssignmentUsedAsCondition" level="WARNING" enabled="true" />
         <inspection_tool class="CastConflictsWithInstanceof" level="WARNING" enabled="true" />
@@ -209,14 +204,18 @@
         <inspection_tool class="CallToNativeMethodWhileLocked" level="WARNING" enabled="true" />
         <inspection_tool class="SleepWhileHoldingLock" level="WARNING" enabled="true" />
         <inspection_tool class="ExtendsThread" level="WARNING" enabled="true" />
-        <inspection_tool class="DoubleCheckedLocking" level="WARNING" enabled="true" />
+        <inspection_tool class="DoubleCheckedLocking" level="WARNING" enabled="true">
+          <option name="ignoreOnVolatileVariables" value="false" />
+        </inspection_tool>
         <inspection_tool class="EmptySynchronizedStatement" level="WARNING" enabled="true" />
         <inspection_tool class="VolatileArrayField" level="WARNING" enabled="true" />
         <inspection_tool class="VolatileLongOrDoubleField" level="WARNING" enabled="true" />
         <inspection_tool class="WaitNotInLoop" level="WARNING" enabled="true" />
         <inspection_tool class="WaitWhileHoldingTwoLocks" level="WARNING" enabled="true" />
         <inspection_tool class="WaitNotInSynchronizedContext" level="WARNING" enabled="true" />
-        <inspection_tool class="WhileLoopSpinsOnField" level="WARNING" enabled="true" />
+        <inspection_tool class="WhileLoopSpinsOnField" level="WARNING" enabled="true">
+          <option name="ignoreNonEmtpyLoops" value="false" />
+        </inspection_tool>
         <inspection_tool class="MethodOverloadsParentMethod" level="WARNING" enabled="true" />
         <inspection_tool class="IOResource" level="WARNING" enabled="true" />
         <inspection_tool class="JDBCResource" level="WARNING" enabled="true" />
@@ -237,7 +236,9 @@
           <option name="m_maxLength" value="64" />
         </inspection_tool>
         <inspection_tool class="CachedNumberConstructorCall" level="WARNING" enabled="true" />
-        <inspection_tool class="CastThatLosesPrecision" level="WARNING" enabled="true" />
+        <inspection_tool class="CastThatLosesPrecision" level="WARNING" enabled="true">
+          <option name="ignoreIntegerCharCasts" value="false" />
+        </inspection_tool>
         <inspection_tool class="FieldAccessedSynchronizedAndUnsynchronized" level="WARNING" enabled="true">
           <option name="countGettersAndSetters" value="false" />
         </inspection_tool>
@@ -252,6 +253,7 @@
         <inspection_tool class="AccessToStaticFieldLockedOnInstance" level="WARNING" enabled="true" />
       </profile>
     </profiles>
+    <list size="0" />
   </component>
   <component name="JavacSettings">
     <option name="DEBUGGING_INFO" value="true" />
@@ -438,6 +440,13 @@
       </item>
     </group>
   </component>
+  <component name="ProjectDetails">
+    <option name="projectName" value="poker" />
+  </component>
+  <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectKey">
+    <option name="state" value="http://localhost/subversion/poker/trunk/etc/intellij/poker.ipr" />
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/experiments.iml" filepath="$PROJECT_DIR$/experiments.iml" group="modules" />
@@ -446,10 +455,9 @@
       <module fileurl="file://$PROJECT_DIR$/utilities.iml" filepath="$PROJECT_DIR$/utilities.iml" group="modules" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
     <output url="file:///Users/dan/Projects/poker/build/classes" />
   </component>
-  <component name="ProjectRunConfigurationManager" />
   <component name="RmicSettings">
     <option name="IS_EANABLED" value="false" />
     <option name="DEBUGGING_INFO" value="true" />
@@ -457,6 +465,13 @@
     <option name="GENERATE_IIOP_STUBS" value="false" />
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
   </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="svn" />
+  </component>
+  <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <component name="com.intellij.jsf.UserDefinedFacesConfigs">
     <option name="USER_DEFINED_CONFIGS">
       <value>
@@ -489,11 +504,5 @@
       <SOURCES />
     </library>
   </component>
-  <component name="uidesigner-configuration">
-    <option name="INSTRUMENT_CLASSES" value="true" />
-    <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />
-    <option name="DEFAULT_LAYOUT_MANAGER" value="GridLayoutManager" />
-  </component>
-  <UsedPathMacros />
 </project>
 

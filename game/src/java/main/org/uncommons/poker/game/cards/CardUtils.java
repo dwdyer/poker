@@ -72,6 +72,34 @@ public final class CardUtils
 
 
     /**
+     * Custom sort routine for 5-card lists.  This is a 5 element sorting
+     * network (http://en.wikipedia.org/wiki/Sorting_network).  It is more
+     * efficient than general purpose sorting algorithms but it only works
+     * with lists containing exactly 5 items.
+     *
+     * Cards are sorting in descending order.
+     *
+     * @param cards A list of 5 cards.
+     */
+    public static void fiveCardSort(List<PlayingCard> cards)
+    {
+        assert cards.size() == 5 : "Sorting network only works with 5 cards.";
+        // Dumping to an array and sorting that is quicker than sorting the list
+        // in place (even a random access list) because of the overhead of get/set
+        // operations on a list.
+        PlayingCard[] array = cards.toArray(new PlayingCard[cards.size()]);
+        fiveCardSort(array);
+
+        // Copy the array back into the list.
+        assert cards instanceof RandomAccess : "Performance problem.";
+        for (int i = 0; i < array.length; i++)
+        {
+            cards.set(i, array[i]);
+        }
+    }
+
+
+    /**
      * Custom sort routine for 7-card lists.  This is a 7 element sorting
      * network (http://en.wikipedia.org/wiki/Sorting_network).  It is more
      * efficient than general purpose sorting algorithms but it only works

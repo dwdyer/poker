@@ -14,7 +14,7 @@ import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.poker.game.cards.Deck;
 import org.uncommons.poker.game.cards.PlayingCard;
 import org.uncommons.poker.game.cards.RankedHand;
-import org.uncommons.poker.game.cards.SevenCardPrecomputedHandEvaluator;
+import org.uncommons.poker.game.cards.LookupHandEvaluator;
 import org.uncommons.poker.game.rules.PokerRules;
 import org.uncommons.poker.game.rules.TexasHoldem;
 
@@ -29,7 +29,7 @@ public class StartingHands
         int seats = Integer.parseInt(args[0]);
         int iterations = Integer.parseInt(args[1]);
         
-        TexasHoldem rules = new TexasHoldem(new SevenCardPrecomputedHandEvaluator());
+        TexasHoldem rules = new TexasHoldem(new LookupHandEvaluator());
         
         long start = System.currentTimeMillis();
         StartingHands startingHands = new StartingHands();
@@ -196,7 +196,7 @@ public class StartingHands
         private int dealtCount = 0;
         private int wonCount = 0;
 
-        public StartingHandInfo(String id)
+        StartingHandInfo(String id)
         {
             this.id = id;
         }
