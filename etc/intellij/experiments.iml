@@ -13,7 +13,17 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="game" />
     <orderEntry type="library" name="testng-5.6-jdk15" level="project" />
-    <orderEntry type="library" name="uncommons-maths-1.1" level="project" />
+    <orderEntry type="library" name="uncommons-maths-1.2.1" level="project" />
+    <orderEntry type="module-library">
+      <library name="watchmaker-framework-0.6.3">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../lib/runtime/watchmaker-framework-0.6.3pre.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../lib/runtime/watchmaker-swing-0.6.3pre.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

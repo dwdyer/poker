@@ -77,11 +77,11 @@ public enum PlayingCard
 
     private final String string;
 
-    private PlayingCard(Suit suit, FaceValue value)
+    PlayingCard(Suit suit, FaceValue value)
     {
         this.suit = suit;
         this.value = value;
-        this.string = "" + value.getSymbol() + suit.getSymbol();
+        this.string = String.valueOf(value.getSymbol()) + suit.getSymbol();
     }
 
 

@@ -13,7 +13,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.uncommons.maths.random.MersenneTwisterRNG;
+import org.uncommons.maths.random.XORShiftRNG;
 import org.uncommons.poker.game.cards.Deck;
 import org.uncommons.poker.game.cards.LookupHandEvaluator;
 import org.uncommons.poker.game.cards.PlayingCard;
@@ -39,7 +39,7 @@ public class StartingHands
         Map<String, StartingHandInfo> info = startingHands.simulate(seats,
                                                                     iterations,
                                                                     rules,
-                                                                    new MersenneTwisterRNG());
+                                                                    new XORShiftRNG());
         long elapsed = System.currentTimeMillis() - start;
         System.out.println("Completed " + iterations + " " + seats + "-player hands in " + elapsed/1000 + " seconds.");
         tabulate(info);
@@ -194,7 +194,7 @@ public class StartingHands
     }
 
 
-    private static class StartingHandInfo
+    private static final class StartingHandInfo
     {
         private final String id;
         private final AtomicInteger dealtCount = new AtomicInteger(0);
