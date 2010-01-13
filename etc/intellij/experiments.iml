@@ -12,9 +12,21 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="game" />
-    <orderEntry type="library" name="testng-5.6-jdk15" level="project" />
     <orderEntry type="library" name="uncommons-maths-1.2.1" level="project" />
-    <orderEntry type="library" name="watchmaker-framework-0.7.0pre" level="project" />
+    <orderEntry type="module-library">
+      <library name="watchmaker-framework-0.7.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../experiments/lib/runtime/jcommon-1.0.16.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../experiments/lib/runtime/jfreechart-1.0.13.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../experiments/lib/runtime/watchmaker-framework-0.7.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../experiments/lib/runtime/google-collect-1.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../experiments/lib/runtime/watchmaker-swing-0.7.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="testng-5.10" level="project" />
   </component>
 </module>
 

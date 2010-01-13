@@ -8,14 +8,18 @@
 
   <taskdef uri="antlib:org.uncommons.antlib"
            resource="org/uncommons/antlib/antlib.xml"
-           classpath="lib/compiletime/uncommons-antlib.jar"/>
+           classpath="lib/compiletime/uncommons-antlib-0.2.5.jar"/>
+
+  <!-- Uncommons Antlib 0.2.5 does not provide a default for this. -->
+  <property name="dist.dir" value="dist" />
 
   <target name="clean">
     <module:clean module="experiments" />
     <module:clean module="game" />
     <module:clean module="utilities" />
     <delete dir="${docs.dir}" />
-    <delete dir="./dist" />
+    <delete dir="${temp.dir}" />
+    <delete dir="${dist.dir}" />
   </target>
 
 
@@ -38,15 +42,11 @@
 
 
   <target name="dist" depends="clean, utilities, game, experiments">
-    <mkdir dir="./dist" />
-    <copy todir="./dist" flatten="true">
-      <fileset dir="${lib.dir}/runtime" includes="*.jar" />
-      <fileset dir="${modules.dir}" includes="*/${build.dir}/*.jar" />
-    </copy>
+    <module:dist />
   </target>
 
   <target name="test" depends="dist">
-    <module:test-all suites="etc/testng/*.xml" />
+    <module:test suites="etc/testng/*.xml" />
   </target>
 
 </project>
