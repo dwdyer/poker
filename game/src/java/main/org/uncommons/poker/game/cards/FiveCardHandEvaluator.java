@@ -1,8 +1,7 @@
 package org.uncommons.poker.game.cards;
 
-import java.util.List;
 import java.util.Collections;
-import org.uncommons.poker.game.Suit;
+import java.util.List;
 import org.uncommons.util.ListUtils;
 
 /**

@@ -32,10 +32,6 @@ public class ColdDeckEvaluator implements FitnessEvaluator<List<PlayingCard>>
             if (!win)
             {
                 ++losses;
-                if (losses >= 10)
-                {
-                    return ((double) losses / i) * 52; // This deck is rubbish, give up.
-                }
             }
         }
         return losses;

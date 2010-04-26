@@ -1,7 +1,5 @@
 package org.uncommons.poker.game.cards;
 
-import org.uncommons.poker.game.Suit;
-
 /**
  * @author Daniel Dyer
  */

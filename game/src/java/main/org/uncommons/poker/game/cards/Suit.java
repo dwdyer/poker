@@ -1,4 +1,4 @@
-package org.uncommons.poker.game;
+package org.uncommons.poker.game.cards;
 
 /**
  * @author Daniel Dyer
@@ -12,7 +12,7 @@ public enum Suit
 
     private final char symbol;
 
-    private Suit(char symbol)
+    Suit(char symbol)
     {
         this.symbol = symbol;
     }

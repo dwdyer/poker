@@ -3,6 +3,7 @@ package org.uncommons.poker.game.cards;
 import java.util.List;
 
 /**
+ * Strategy interface for evaluating poker hands.
  * @author Daniel Dyer
  */
 public interface HandEvaluator
